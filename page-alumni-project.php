@@ -51,18 +51,24 @@ get_header('internal'); ?>
     .kolaborasi-text h4 { color: #D74690; font-family: 'Segoe UI', sans-serif; font-size: 13px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; }
     .kolaborasi-text h2 { font-size: 36px; line-height: 1.2; margin-bottom: 20px; color: #4A0A1F; }
     .kolaborasi-text p { color: #96757F; line-height: 1.7; margin-bottom: 25px; }
+    
+    /* Penyesuaian List Checklist dengan Sub Teks */
     .kolaborasi-list { list-style: none; padding: 0; margin: 0 0 30px 0; }
-    .kolaborasi-list li { position: relative; padding-left: 30px; margin-bottom: 15px; font-size: 15px; color: #96757F; font-weight: 600; }
-    .kolaborasi-list li::before { content: '✓'; position: absolute; left: 0; top: 0; color: #D74690; background: rgba(215,70,144,0.1); width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; }
+    .kolaborasi-list li { position: relative; padding-left: 35px; margin-bottom: 25px; }
+    .k-list-title { font-size: 16px; color: #4A0A1F; font-weight: 700; margin-bottom: 5px; }
+    .k-list-sub { font-size: 14px; color: #96757F; line-height: 1.5; font-weight: 400; }
+    .kolaborasi-list li::before { content: '✓'; position: absolute; left: 0; top: 0; color: #D74690; background: rgba(215,70,144,0.1); width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; }
     
     .kolaborasi-img-wrapper { flex: 1; min-width: 300px; position: relative; }
     .kolaborasi-img-wrapper img { width: 100%; border-radius: 12px; object-fit: cover; height: 400px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
     
-    /* Perbaikan Floating Card sesuai desain */
-    .floating-card { position: absolute; bottom: -20px; left: -30px; background: #fff; padding: 25px 30px; border-radius: 12px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 85%; display: flex; flex-direction: column; gap: 15px; }
-    .f-header { display: flex; justify-content: space-between; align-items: center; width: 100%; }
-    .floating-card .f-text { font-weight: 700; font-size: 16px; color: #4A0A1F; }
+    /* Perbaikan Floating Card & Alignment */
+    .floating-card { position: absolute; bottom: 30px; left: -40px; background: #fff; padding: 25px 30px; border-radius: 12px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 85%; max-width: 400px; display: flex; flex-direction: column; gap: 15px; z-index: 2; }
+    .f-header { display: flex; justify-content: space-between; align-items: flex-start; width: 100%; }
+    .floating-card .f-text { font-weight: 700; font-size: 16px; color: #4A0A1F; margin-bottom: 4px; }
+    .floating-card .f-year { font-size: 12px; color: #96757F; font-weight: 600; }
     .floating-card .f-status { color: #D74690; font-size: 11px; font-weight: bold; text-transform: uppercase; background: rgba(215,70,144,0.1); padding: 4px 12px; border-radius: 20px; }
+    
     .progress-container { width: 100%; }
     .progress-bar-bg { width: 100%; height: 6px; background: #eaeaea; border-radius: 3px; overflow: hidden; margin-bottom: 10px; }
     .progress-bar-fill { height: 100%; background: #D74690; border-radius: 3px; transition: width 1s ease-in-out; }
@@ -94,9 +100,9 @@ get_header('internal'); ?>
 
     @media (max-width: 768px) {
         .kolaborasi-section { flex-direction: column; }
-        .floating-card { left: 10px; width: 90%; bottom: -40px; }
-        .bottom-banner { flex-direction: column; text-align: center; }
+        .floating-card { left: 5%; width: 90%; bottom: -30px; }
         .kolaborasi-img-wrapper { margin-bottom: 50px; }
+        .bottom-banner { flex-direction: column; text-align: center; }
     }
 </style>
 
@@ -189,6 +195,11 @@ get_header('internal'); ?>
     $k_img = get_field('kolaborasi_gambar');
     $k_float = get_field('kolaborasi_floating_teks');
     
+    // Menangkap variabel baru
+    $k_tahun = get_field('kolaborasi_tahun');
+    $k_subpoin1 = get_field('kolaborasi_subpoin_1');
+    $k_subpoin2 = get_field('kolaborasi_subpoin_2');
+    
     // Mengambil nilai progress (dengan fallback 75)
     $k_progress = get_field('kolaborasi_progress');
     $progress_val = $k_progress ? esc_attr($k_progress) : '75';
@@ -201,20 +212,42 @@ get_header('internal'); ?>
             <h4>KOLABORASI PUBLIK</h4>
             <h2><?php echo esc_html($k_judul); ?></h2>
             <p><?php echo esc_html($k_desc); ?></p>
+            
             <ul class="kolaborasi-list">
-                <?php if($k_poin1): ?><li><?php echo esc_html($k_poin1); ?></li><?php endif; ?>
-                <?php if($k_poin2): ?><li><?php echo esc_html($k_poin2); ?></li><?php endif; ?>
+                <?php if($k_poin1): ?>
+                    <li>
+                        <div class="k-list-title"><?php echo esc_html($k_poin1); ?></div>
+                        <?php if($k_subpoin1): ?>
+                            <div class="k-list-sub"><?php echo esc_html($k_subpoin1); ?></div>
+                        <?php endif; ?>
+                    </li>
+                <?php endif; ?>
+                
+                <?php if($k_poin2): ?>
+                    <li>
+                        <div class="k-list-title"><?php echo esc_html($k_poin2); ?></div>
+                        <?php if($k_subpoin2): ?>
+                            <div class="k-list-sub"><?php echo esc_html($k_subpoin2); ?></div>
+                        <?php endif; ?>
+                    </li>
+                <?php endif; ?>
             </ul>
+
             <a href="#" class="btn-outline-pink" style="padding: 10px 20px; font-size: 14px;">Baca Laporan Lengkap →</a>
         </div>
+        
         <div class="kolaborasi-img-wrapper">
             <img src="<?php echo esc_url($k_img ? $k_img : get_template_directory_uri().'/images/dummy-office.jpg'); ?>" alt="Kolaborasi">
             
             <div class="floating-card">
                 <div class="f-header">
-                    <span class="f-text"><?php echo esc_html($k_float ? $k_float : 'Partner In Community'); ?></span>
+                    <div>
+                        <div class="f-text"><?php echo esc_html($k_float ? $k_float : 'Partner In Community'); ?></div>
+                        <div class="f-year"><?php echo esc_html($k_tahun ? $k_tahun : '2024 - 2025'); ?></div>
+                    </div>
                     <span class="f-status">AKTIF</span>
                 </div>
+                
                 <div class="progress-container">
                     <div class="progress-bar-bg">
                         <div class="progress-bar-fill" style="width: <?php echo $progress_val; ?>%;"></div>
