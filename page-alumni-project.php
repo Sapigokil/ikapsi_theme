@@ -45,33 +45,86 @@ get_header('internal'); ?>
     .p-card-link { font-size: 13px; font-weight: 700; color: #4A0A1F; text-decoration: none; text-transform: uppercase; letter-spacing: 0.5px; }
     .p-card-link:hover { color: #D74690; }
 
-    /* 3. Kolaborasi (Dinamis dari ACF Page) */
+    /* 3. Kolaborasi Publik */
     .kolaborasi-section { max-width: 1200px; margin: 0 auto 80px; padding: 0 20px; display: flex; align-items: center; gap: 60px; flex-wrap: wrap; }
     .kolaborasi-text { flex: 1; min-width: 300px; }
     .kolaborasi-text h4 { color: #D74690; font-family: 'Segoe UI', sans-serif; font-size: 13px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; }
     .kolaborasi-text h2 { font-size: 36px; line-height: 1.2; margin-bottom: 20px; color: #4A0A1F; }
     .kolaborasi-text p { color: #96757F; line-height: 1.7; margin-bottom: 25px; }
     
-    /* Penyesuaian List Checklist dengan Sub Teks */
+    /* List Kolaborasi */
     .kolaborasi-list { list-style: none; padding: 0; margin: 0 0 30px 0; }
     .kolaborasi-list li { position: relative; padding-left: 35px; margin-bottom: 25px; }
     .k-list-title { font-size: 16px; color: #4A0A1F; font-weight: 700; margin-bottom: 5px; }
     .k-list-sub { font-size: 14px; color: #96757F; line-height: 1.5; font-weight: 400; }
     .kolaborasi-list li::before { content: '✓'; position: absolute; left: 0; top: 0; color: #D74690; background: rgba(215,70,144,0.1); width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; }
     
-    .kolaborasi-img-wrapper { flex: 1; min-width: 300px; position: relative; }
-    .kolaborasi-img-wrapper img { width: 100%; border-radius: 12px; object-fit: cover; height: 400px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+    /* --- PERBAIKAN ALIGNMENT GAMBAR & FLOATING CARD --- */
+    .kolaborasi-img-wrapper { 
+        flex: 1; 
+        min-width: 300px; 
+        padding: 30px 0 40px 40px; /* Ruang untuk dekorasi background & card */
+    }
     
-    /* Perbaikan Floating Card & Alignment */
-    .floating-card { position: absolute; bottom: 30px; left: -40px; background: #fff; padding: 25px 30px; border-radius: 12px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 85%; max-width: 400px; display: flex; flex-direction: column; gap: 15px; z-index: 2; }
-    .f-header { display: flex; justify-content: space-between; align-items: flex-start; width: 100%; }
-    .floating-card .f-text { font-weight: 700; font-size: 16px; color: #4A0A1F; margin-bottom: 4px; }
-    .floating-card .f-year { font-size: 12px; color: #96757F; font-weight: 600; }
-    .floating-card .f-status { color: #D74690; font-size: 11px; font-weight: bold; text-transform: uppercase; background: rgba(215,70,144,0.1); padding: 4px 12px; border-radius: 20px; }
+    .k-img-container { 
+        position: relative; 
+        width: 100%; 
+        max-width: 550px; 
+        margin: 0 auto; 
+    }
+    
+    /* Dekorasi latar belakang abu-abu yang bergeser ke kiri atas */
+    .k-img-container::before { 
+        content: ''; 
+        position: absolute; 
+        top: -25px; 
+        left: -25px; 
+        width: 100%; 
+        height: 100%; 
+        background-color: #f4f5f7; 
+        border-radius: 16px; 
+        z-index: 0; 
+    }
+    
+    .k-img-container img { 
+        position: relative; 
+        z-index: 1; 
+        width: 100%; 
+        height: 400px; 
+        object-fit: cover; 
+        border-radius: 16px; 
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05); 
+        display: block; 
+    }
+    
+    .floating-card { 
+        position: absolute; 
+        bottom: -35px; /* Menjorok ke bawah */
+        left: -40px;   /* Menjorok ke kiri */
+        background: #fff; 
+        padding: 25px 30px; 
+        border-radius: 12px; 
+        box-shadow: 0 15px 40px rgba(0,0,0,0.08); 
+        width: calc(100% - 20px); 
+        max-width: 420px; 
+        z-index: 2; 
+        display: flex; 
+        flex-direction: column; 
+    }
+
+    .f-header-top { 
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center; 
+        margin-bottom: 5px; 
+    }
+    .floating-card .f-text { font-weight: 700; font-size: 18px; color: #4A0A1F; margin: 0; }
+    .floating-card .f-status { color: #D74690; font-size: 11px; font-weight: 800; text-transform: uppercase; background: rgba(215,70,144,0.1); padding: 5px 14px; border-radius: 20px; }
+    .floating-card .f-year { font-size: 13px; color: #96757F; font-weight: 500; margin-bottom: 20px; }
     
     .progress-container { width: 100%; }
-    .progress-bar-bg { width: 100%; height: 6px; background: #eaeaea; border-radius: 3px; overflow: hidden; margin-bottom: 10px; }
-    .progress-bar-fill { height: 100%; background: #D74690; border-radius: 3px; transition: width 1s ease-in-out; }
+    .progress-bar-bg { width: 100%; height: 8px; background: #eaeaea; border-radius: 10px; overflow: hidden; margin-bottom: 10px; }
+    .progress-bar-fill { height: 100%; background: #D74690; border-radius: 10px; transition: width 1s ease-in-out; }
     .progress-text { font-size: 12px; color: #96757F; text-align: right; width: 100%; display: block; font-weight: 600; }
 
     /* 4. Mitra Section (Dinamis dari ACF Page) */
@@ -100,8 +153,8 @@ get_header('internal'); ?>
 
     @media (max-width: 768px) {
         .kolaborasi-section { flex-direction: column; }
-        .floating-card { left: 5%; width: 90%; bottom: -30px; }
-        .kolaborasi-img-wrapper { margin-bottom: 50px; }
+        .kolaborasi-img-wrapper { padding: 30px 20px 40px 20px; margin-bottom: 50px; }
+        .floating-card { left: 10px; width: calc(100% - 20px); bottom: -30px; }
         .bottom-banner { flex-direction: column; text-align: center; }
     }
 </style>
@@ -237,25 +290,29 @@ get_header('internal'); ?>
         </div>
         
         <div class="kolaborasi-img-wrapper">
-            <img src="<?php echo esc_url($k_img ? $k_img : get_template_directory_uri().'/images/dummy-office.jpg'); ?>" alt="Kolaborasi">
-            
-            <div class="floating-card">
-                <div class="f-header">
-                    <div>
-                        <div class="f-text"><?php echo esc_html($k_float ? $k_float : 'Partner In Community'); ?></div>
-                        <div class="f-year"><?php echo esc_html($k_tahun ? $k_tahun : '2024 - 2025'); ?></div>
-                    </div>
-                    <span class="f-status">AKTIF</span>
-                </div>
+            <!-- Container baru agar absolute styling bekerja sempurna -->
+            <div class="k-img-container">
+                <img src="<?php echo esc_url($k_img ? $k_img : get_template_directory_uri().'/images/dummy-office.jpg'); ?>" alt="Kolaborasi">
                 
-                <div class="progress-container">
-                    <div class="progress-bar-bg">
-                        <div class="progress-bar-fill" style="width: <?php echo $progress_val; ?>%;"></div>
+                <div class="floating-card">
+                    <!-- Judul dan Status Sebaris -->
+                    <div class="f-header-top">
+                        <div class="f-text"><?php echo esc_html($k_float ? $k_float : 'Partner In Community'); ?></div>
+                        <span class="f-status">AKTIF</span>
                     </div>
-                    <span class="progress-text">Progress: <?php echo $progress_val; ?>% Lengkap</span>
+                    
+                    <!-- Tahun di bawahnya -->
+                    <div class="f-year"><?php echo esc_html($k_tahun ? $k_tahun : '2024 - 2025'); ?></div>
+                    
+                    <!-- Progress Bar -->
+                    <div class="progress-container">
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" style="width: <?php echo $progress_val; ?>%;"></div>
+                        </div>
+                        <span class="progress-text">Progress: <?php echo $progress_val; ?>% Lengkap</span>
+                    </div>
                 </div>
             </div>
-
         </div>
     </section>
     <?php endif; ?>
