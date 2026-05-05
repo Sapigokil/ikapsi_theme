@@ -1,0 +1,191 @@
+<?php
+/**
+ * Template Name: Front Page
+ * Description: Template khusus untuk halaman beranda IKAPSI UNDIP dengan Slider ACF.
+ */
+
+get_header(); ?>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+<style>
+    /* Styling khusus Slider */
+    .hero-swiper { width: 100%; height: 450px; position: relative; }
+    .swiper-slide { background-position: center; background-size: cover; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 50px; }
+    .swiper-pagination-bullet-active { background: #D74690 !important; }
+    .swiper-pagination-bullet { background: #fff; opacity: 1; width: 12px; height: 12px; }
+    
+    /* Overlay agar teks/tombol tetap kontras */
+    .slide-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(0,0,0,0) 60%, rgba(0,0,0,0.3) 100%); pointer-events: none; }
+</style>
+
+<main id="primary" class="site-main" style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+
+    <section class="hero-section" style="position: relative;">
+        <div class="swiper hero-swiper">
+            <div class="swiper-wrapper">
+                <?php 
+                // Mengumpulkan data dari 5 slot ACF
+                $has_slides = false;
+                for ($i = 1; $i <= 5; $i++) {
+                    $img_url = get_field('hero_' . $i);
+                    if ($img_url) : 
+                        $has_slides = true;
+                ?>
+                    <div class="swiper-slide" style="background-image: url('<?php echo esc_url($img_url); ?>');">
+                        <div class="slide-overlay"></div>
+                    </div>
+                <?php 
+                    endif;
+                } 
+                
+                // Fallback jika belum ada gambar yang diupload di ACF
+                if (!$has_slides) : ?>
+                    <div class="swiper-slide" style="background-color: #e0e0e0;">
+                        <p style="color: #666;">Silakan upload gambar di ACF Field Beranda</p>
+                    </div>
+                <?php endif; ?>
+            </div>
+            
+            <div class="swiper-pagination"></div>
+        </div>
+
+        <div class="join-button-wrapper" style="position: absolute; right: 8%; bottom: -25px; z-index: 99;">
+            <a href="#" class="btn-join" style="display: inline-block; background-color: #D74690; color: #ffffff; padding: 18px 40px; text-decoration: none; font-weight: bold; font-size: 16px; border-radius: 4px; box-shadow: 0 4px 15px rgba(215,70,144,0.4);">JOIN NOW</a>
+        </div>
+    </section>
+
+    <section class="info-terbaru-section" style="padding: 100px 0 40px;">
+        <div class="container" style="max-width: 1350px; margin: 0 auto; padding: 0 20px;">
+            <h2 style="color: #D74690; margin-bottom: 40px; font-size: 24px; font-weight: 600;">Info Terbaru</h2>
+            
+            <div class="row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
+                <?php
+                $query_info = new WP_Query(array('post_type' => 'post', 'posts_per_page' => 3, 'category_name' => 'berita'));
+                if ($query_info->have_posts()) : while ($query_info->have_posts()) : $query_info->the_post(); ?>
+                    <div class="card" style="border: 1px solid #eaeaea; border-radius: 4px; overflow: hidden;">
+                        <div class="thumbnail" style="background-color: #f5f5f5; height: 220px;">
+                            <?php if (has_post_thumbnail()) the_post_thumbnail('medium', array('style' => 'width:100%; height:100%; object-fit:cover;')); ?>
+                        </div>
+                        <div class="content" style="padding: 25px 20px;">
+                            <h3 style="font-size: 18px; color: #D74690; margin: 0 0 15px 0; font-weight: 600;"><?php the_title(); ?></h3>
+                            <p style="font-size: 14px; color: #555; margin-bottom: 25px; line-height: 1.6;"><?php echo wp_trim_words(get_the_excerpt(), 25, '...'); ?></p>
+                            <div style="display: flex; justify-content: space-between; font-size: 13px; color: #888;">
+                                <span><?php echo get_the_date('d M Y'); ?></span>
+                                <a href="<?php the_permalink(); ?>" style="color: #D74690; text-decoration: none; font-weight: 600;">Selengkapnya >></a>
+                            </div>
+                        </div>
+                    </div>
+                <?php endwhile; wp_reset_postdata(); endif; ?>
+            </div>
+        </div>
+    </section>
+
+    <section class="event-section" style="padding: 40px 0 60px;">
+        <div class="container" style="max-width: 1350px; margin: 0 auto; padding: 0 20px;">
+            <h2 style="color: #D74690; margin-bottom: 40px; font-size: 24px; font-weight: 600;">Event dan Pelatihan</h2>
+            <div class="row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
+                <?php
+                $query_event = new WP_Query(array('post_type' => 'post', 'posts_per_page' => 3, 'category_name' => 'event'));
+                if ($query_event->have_posts()) : while ($query_event->have_posts()) : $query_event->the_post(); ?>
+                    <div class="card" style="border: 1px solid #eaeaea; position: relative;">
+                        <div class="date-badge" style="position: absolute; top: 15px; left: 15px; background: #fff; text-align: center; z-index: 2; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <span style="font-size: 26px; font-weight: 700; display: block; padding: 5px 10px 0;"><?php echo get_the_date('d'); ?></span>
+                            <span style="font-size: 11px; background: #D74690; color: #fff; padding: 4px 15px; display: block; margin-top: 5px; font-weight: 600;"><?php echo strtoupper(get_the_date('M Y')); ?></span>
+                        </div>
+                        <div class="thumbnail" style="height: 220px;"><?php if (has_post_thumbnail()) the_post_thumbnail('medium', array('style' => 'width:100%; height:100%; object-fit:cover;')); ?></div>
+                        <div class="content" style="padding: 25px 20px;">
+                            <h3 style="font-size: 18px; color: #D74690; margin: 0 0 15px 0;"><?php the_title(); ?></h3>
+                            <a href="<?php the_permalink(); ?>" style="display: block; text-align: right; color: #D74690; text-decoration: none; font-size: 13px;">Selengkapnya >></a>
+                        </div>
+                    </div>
+                <?php endwhile; wp_reset_postdata(); endif; ?>
+            </div>
+        </div>
+    </section>
+
+    <section class="galeri-section" style="padding: 20px 0 60px;">
+        <div class="container" style="max-width: 1350px; margin: 0 auto; padding: 0 20px;">
+            <h2 style="color: #D74690; margin-bottom: 40px; font-size: 24px; font-weight: 600;">Galeri Foto/Video</h2>
+            <div class="row" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+                <?php
+                $query_galeri = new WP_Query(array('post_type' => 'post', 'posts_per_page' => 6, 'category_name' => 'galeri'));
+                if ($query_galeri->have_posts()) : while ($query_galeri->have_posts()) : $query_galeri->the_post(); ?>
+                    <div style="height: 180px; background-image: url('<?php echo get_the_post_thumbnail_url(null, 'medium'); ?>'); background-size: cover; background-position: center; border-radius: 4px;"></div>
+                <?php endwhile; wp_reset_postdata(); else: 
+                    for($i=0; $i<6; $i++) echo '<div style="background-color: #f5f5f5; height: 180px;"></div>';
+                endif; ?>
+            </div>
+        </div>
+    </section>
+
+    <section class="profil-section" style="background-color: #0b1c4c; color: #ffffff; padding: 80px 0;">
+        <div class="container" style="max-width: 1350px; margin: 0 auto; padding: 0 20px;">
+            <div class="row" style="display: flex; gap: 60px; align-items: center; flex-wrap: wrap;">
+                <div class="col-md-5" style="flex: 1; min-width: 300px;">
+                    <div style="margin-bottom: 25px; display: flex; align-items: center; gap: 15px;">
+                        <div style="width: 70px; height: 70px; border-radius: 50%; overflow: hidden; background: #fff; padding: 5px;">
+                            <img src="<?php echo esc_url(get_template_directory_uri() . '/images/logo-1.png'); ?>" style="width: 100%; height: auto; object-fit: contain;">
+                        </div>
+                        <div>
+                            <h3 style="margin: 0; font-size: 14px; font-weight: 400;">UNIVERSITAS DIPONEGORO</h3>
+                            <h2 style="margin: 0; color: #ffffff; font-size: 24px; font-weight: 700;">FAKULTAS PSIKOLOGI</h2>
+                        </div>
+                    </div>
+                    <p style="font-size: 15px; line-height: 1.8; color: #d0d5e0;">Membangun sinergi antar alumni psikologi Universitas Diponegoro untuk kemajuan bersama dan kontribusi nyata bagi masyarakat.</p>
+                </div>
+                <div class="col-md-7" style="flex: 1.2; min-width: 300px;">
+                    <div style="background-color: #1a2a5a; height: 350px; display: flex; align-items: center; justify-content: center; border-radius: 8px; position: relative; border: 1px solid rgba(255,255,255,0.1);">
+                        <div style="width: 70px; height: 70px; background: #D74690; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+                            <span style="border-top: 15px solid transparent; border-bottom: 15px solid transparent; border-left: 20px solid white; margin-left: 5px;"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="hubungi-section" style="padding: 80px 0; background-color: #fdfdfd;">
+        <div class="container" style="max-width: 1350px; margin: 0 auto; padding: 0 20px;">
+            <h2 style="color: #D74690; margin-bottom: 40px; font-size: 24px; font-weight: 600;">Hubungi IKAPSI UNDIP</h2>
+            <div class="row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                <div style="background: #fff; padding: 25px; border-radius: 6px; box-shadow: 0 2px 15px rgba(0,0,0,0.05); display: flex; align-items: center;">
+                    <div style="width: 45px; height: 45px; background: rgba(215,70,144,0.1); color: #D74690; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin-right: 15px; font-weight: bold;">WA</div>
+                    <div><div style="font-weight: 600; color: #D74690;">WhatsApp</div><div style="font-size: 14px; color: #666;">0812-3456-7890</div></div>
+                </div>
+                <div style="background: #fff; padding: 25px; border-radius: 6px; box-shadow: 0 2px 15px rgba(0,0,0,0.05); display: flex; align-items: center;">
+                    <div style="width: 45px; height: 45px; background: rgba(215,70,144,0.1); color: #D74690; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin-right: 15px; font-weight: bold;">IG</div>
+                    <div><div style="font-weight: 600; color: #D74690;">Instagram</div><div style="font-size: 14px; color: #666;">@ikapsiundip</div></div>
+                </div>
+                <div style="background: #fff; padding: 25px; border-radius: 6px; box-shadow: 0 2px 15px rgba(0,0,0,0.05); display: flex; align-items: center;">
+                    <div style="width: 45px; height: 45px; background: rgba(215,70,144,0.1); color: #D74690; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin-right: 15px; font-weight: bold;">EM</div>
+                    <div><div style="font-weight: 600; color: #D74690;">Email</div><div style="font-size: 14px; color: #666;">admin@ikapsiundip.com</div></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<script>
+    // Inisialisasi Swiper Slider
+    const swiper = new Swiper('.hero-swiper', {
+        loop: true,
+        // Atur kecepatan transisi animasi di sini (contoh: 1000 = 1 detik)
+        speed: 1000, 
+        autoplay: { 
+            // Atur durasi gambar diam di layar sebelum ganti (contoh: 3000 = 3 detik)
+            delay: 3000, 
+            disableOnInteraction: false 
+        },
+        pagination: { 
+            el: '.swiper-pagination', 
+            clickable: true 
+        },
+        effect: 'fade',
+        fadeEffect: { crossFade: true }
+    });
+</script>
+
+<?php get_footer(); ?>

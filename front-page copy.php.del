@@ -1,0 +1,270 @@
+<?php
+/**
+ * Template Name: Front Page
+ * Description: Template khusus untuk halaman beranda IKAPSI UNDIP.
+ */
+
+get_header(); // Memanggil file header.php
+?>
+
+<main id="primary" class="site-main">
+
+    <?php 
+    // 1. LOGIKA HERO SECTION
+    // Mengambil URL Featured Image dari halaman Beranda ini
+    $hero_bg_url = '';
+    if ( has_post_thumbnail() ) {
+        $hero_bg_url = get_the_post_thumbnail_url( get_the_ID(), 'full' );
+    } else {
+        $hero_bg_url = '#e0e0e0'; // Fallback warna abu-abu jika gambar belum diupload
+    }
+    
+    // Mengecek apakah $hero_bg_url adalah link gambar atau warna
+    $hero_style = ( strpos($hero_bg_url, 'http') !== false ) 
+        ? "background: url('{$hero_bg_url}') center/cover no-repeat;" 
+        : "background-color: {$hero_bg_url};";
+    ?>
+    <section class="hero-section" style="position: relative; <?php echo $hero_style; ?> height: 400px; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 20px;">
+        <div class="slider-indicators">
+            <span style="display: inline-block; width: 12px; height: 12px; background: #d81b60; border-radius: 50%; margin: 0 5px;"></span>
+            <span style="display: inline-block; width: 12px; height: 12px; background: #ffffff; border-radius: 50%; margin: 0 5px;"></span>
+            <span style="display: inline-block; width: 12px; height: 12px; background: #ffffff; border-radius: 50%; margin: 0 5px;"></span>
+        </div>
+        
+        <div class="join-button-wrapper" style="position: absolute; right: 5%; bottom: -20px;">
+            <a href="#" class="btn-join" style="background-color: #d81b60; color: #ffffff; padding: 15px 30px; text-decoration: none; font-weight: bold; border-radius: 4px;">JOIN NOW</a>
+        </div>
+    </section>
+
+    <section class="info-terbaru-section" style="padding: 60px 0;">
+        <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 15px;">
+            <h2 style="color: #d81b60; margin-bottom: 30px;">Info Terbaru</h2>
+            
+            <div class="row" style="display: flex; gap: 20px; flex-wrap: wrap;">
+                <?php
+                // Looping mengambil 3 post dari kategori "berita"
+                $args_info = array(
+                    'post_type'      => 'post',
+                    'posts_per_page' => 3,
+                    'category_name'  => 'berita' // Pastikan slug kategorinya adalah 'berita'
+                );
+                $query_info = new WP_Query( $args_info );
+
+                if ( $query_info->have_posts() ) :
+                    while ( $query_info->have_posts() ) : $query_info->the_post();
+                ?>
+                    <div class="col-md-4" style="flex: 1; min-width: 300px; border: 1px solid #eaeaea; padding-bottom: 20px;">
+                        <div class="thumbnail" style="background-color: #e0e0e0; height: 200px; margin-bottom: 15px; overflow: hidden;">
+                            <?php 
+                            if ( has_post_thumbnail() ) {
+                                the_post_thumbnail('medium', array('style' => 'width:100%; height:100%; object-fit:cover;'));
+                            } 
+                            ?>
+                        </div>
+                        <div class="content" style="padding: 0 15px;">
+                            <h3 style="font-size: 18px; color: #d81b60; margin-bottom: 10px;"><?php the_title(); ?></h3>
+                            <div style="font-size: 14px; color: #333; margin-bottom: 15px;">
+                                <?php echo wp_trim_words( get_the_excerpt(), 20, '...' ); ?>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; font-size: 12px; color: #888;">
+                                <span><?php echo get_the_date('d M Y'); ?></span>
+                                <a href="<?php the_permalink(); ?>" style="color: #d81b60; text-decoration: none;">Selengkapnya >></a>
+                            </div>
+                        </div>
+                    </div>
+                <?php
+                    endwhile;
+                    wp_reset_postdata();
+                else :
+                    echo '<p style="width: 100%;">Belum ada info terbaru di kategori Berita.</p>';
+                endif;
+                ?>
+            </div>
+        </div>
+    </section>
+
+    <section class="event-section" style="padding: 60px 0; background-color: #fcfcfc;">
+        <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 15px;">
+            <h2 style="color: #d81b60; margin-bottom: 30px;">Event dan Pelatihan</h2>
+            
+            <div class="row" style="display: flex; gap: 20px; flex-wrap: wrap;">
+                <?php
+                // Looping mengambil 3 post dari kategori "event"
+                $args_event = array(
+                    'post_type'      => 'post',
+                    'posts_per_page' => 3,
+                    'category_name'  => 'event' // Pastikan slug kategorinya adalah 'event'
+                );
+                $query_event = new WP_Query( $args_event );
+
+                if ( $query_event->have_posts() ) :
+                    while ( $query_event->have_posts() ) : $query_event->the_post();
+                    
+                    // Memecah format tanggal untuk badge event
+                    $event_day = get_the_date('d'); // Mengambil angka hari saja (misal: 28)
+                    $event_month_year = get_the_date('M Y'); // Mengambil bulan dan tahun (misal: FEB 2023)
+                ?>
+                    <div class="col-md-4" style="flex: 1; min-width: 300px; border: 1px solid #eaeaea; position: relative;">
+                        <div class="date-badge" style="position: absolute; top: 10px; left: 10px; background: #fff; border: 2px solid #d81b60; padding: 5px 10px; text-align: center; z-index: 2;">
+                            <span style="font-size: 24px; font-weight: bold; display: block; line-height: 1;"><?php echo $event_day; ?></span>
+                            <span style="font-size: 12px; background: #d81b60; color: #fff; padding: 2px 5px; display: block; margin-top: 5px; text-transform: uppercase;"><?php echo $event_month_year; ?></span>
+                        </div>
+                        <div class="thumbnail" style="background-color: #e0e0e0; height: 200px; overflow: hidden;">
+                            <?php 
+                            if ( has_post_thumbnail() ) {
+                                the_post_thumbnail('medium', array('style' => 'width:100%; height:100%; object-fit:cover;'));
+                            } 
+                            ?>
+                        </div>
+                        <div class="content" style="padding: 20px 15px;">
+                            <h3 style="font-size: 18px; color: #d81b60; margin-bottom: 10px;"><?php the_title(); ?></h3>
+                            <div style="font-size: 14px; color: #333; margin-bottom: 15px;">
+                                <?php echo wp_trim_words( get_the_excerpt(), 15, '...' ); ?>
+                            </div>
+                            <div style="text-align: right; font-size: 12px;">
+                                <a href="<?php the_permalink(); ?>" style="color: #d81b60; text-decoration: none;">Selengkapnya >></a>
+                            </div>
+                        </div>
+                    </div>
+                <?php
+                    endwhile;
+                    wp_reset_postdata();
+                else :
+                    echo '<p style="width: 100%;">Belum ada event terbaru.</p>';
+                endif;
+                ?>
+            </div>
+        </div>
+    </section>
+
+    <section class="galeri-section" style="padding: 60px 0;">
+        <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 15px;">
+            <h2 style="color: #d81b60; margin-bottom: 30px;">Galeri Foto/Video</h2>
+            
+            <div class="row" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
+                <?php
+                // Looping mengambil 6 post dari kategori "galeri" untuk ditarik gambarnya
+                $args_galeri = array(
+                    'post_type'      => 'post',
+                    'posts_per_page' => 6,
+                    'category_name'  => 'galeri' // Pastikan slug kategorinya adalah 'galeri'
+                );
+                $query_galeri = new WP_Query( $args_galeri );
+
+                if ( $query_galeri->have_posts() ) :
+                    while ( $query_galeri->have_posts() ) : $query_galeri->the_post();
+                    
+                    // Mengambil URL gambar thumbnail
+                    $img_url = '';
+                    if ( has_post_thumbnail() ) {
+                        $img_url = get_the_post_thumbnail_url( get_the_ID(), 'medium' );
+                    }
+                ?>
+                    <div style="background-color: #e0e0e0; height: 150px; background-image: url('<?php echo esc_url($img_url); ?>'); background-size: cover; background-position: center;"></div>
+                <?php
+                    endwhile;
+                    wp_reset_postdata();
+                else :
+                    // Fallback jika belum ada galeri (menampilkan kotak kosong seperti desain awal Anda)
+                    for($i=0; $i<6; $i++){
+                        echo '<div style="background-color: #e0e0e0; height: 150px;"></div>';
+                    }
+                endif;
+                ?>
+            </div>
+            
+            <div class="slider-indicators" style="text-align: center; margin-top: 20px;">
+                <span style="display: inline-block; width: 10px; height: 10px; background: #d81b60; border-radius: 50%; margin: 0 5px;"></span>
+                <span style="display: inline-block; width: 10px; height: 10px; border: 1px solid #d81b60; border-radius: 50%; margin: 0 5px;"></span>
+                <span style="display: inline-block; width: 10px; height: 10px; border: 1px solid #d81b60; border-radius: 50%; margin: 0 5px;"></span>
+            </div>
+        </div>
+    </section>
+
+    <section class="profil-section" style="background-color: #0b1c4c; color: #ffffff; padding: 60px 0;">
+        <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 15px;">
+            <div class="row" style="display: flex; gap: 40px; align-items: center; flex-wrap: wrap;">
+                
+                <div class="col-md-5" style="flex: 1; min-width: 300px;">
+                    <div style="margin-bottom: 20px;">
+                        <h3 style="margin: 0;">UNIVERSITAS DIPONEGORO</h3>
+                        <h2 style="margin: 0; color: #d81b60;">FAKULTAS PSIKOLOGI</h2>
+                    </div>
+                    <p style="font-size: 14px; line-height: 1.6;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                </div>
+                
+                <div class="col-md-7" style="flex: 1.5; min-width: 300px;">
+                    <div style="background-color: #e0e0e0; height: 300px; display: flex; align-items: center; justify-content: center; position: relative;">
+                        <div style="width: 60px; height: 60px; background-color: #d81b60; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+                            <span style="border-top: 15px solid transparent; border-bottom: 15px solid transparent; border-left: 20px solid white; margin-left: 5px;"></span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section class="hubungi-section" style="padding: 60px 0; background-color: #f5f5f5;">
+        <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 15px;">
+            <h2 style="color: #d81b60; margin-bottom: 30px;">Hubungi IKAPSI UNDIP</h2>
+            
+            <div class="row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                
+                <div class="contact-card" style="background: #ffffff; padding: 20px; display: flex; align-items: center; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                    <div class="icon" style="margin-right: 15px; color: #d81b60;">[WA Icon]</div>
+                    <div>
+                        <div style="font-weight: bold; font-size: 14px;">WhatsApp IKAPSI UNDIP</div>
+                        <div style="font-size: 14px; color: #666;">0812 3456 7890</div>
+                    </div>
+                </div>
+
+                <div class="contact-card" style="background: #ffffff; padding: 20px; display: flex; align-items: center; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                    <div class="icon" style="margin-right: 15px; color: #d81b60;">[IG Icon]</div>
+                    <div>
+                        <div style="font-weight: bold; font-size: 14px;">Instagram IKAPSI UNDIP</div>
+                        <div style="font-size: 14px; color: #666;">@ikapsiundip</div>
+                    </div>
+                </div>
+
+                <div class="contact-card" style="background: #ffffff; padding: 20px; display: flex; align-items: center; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                    <div class="icon" style="margin-right: 15px; color: #d81b60;">[FB Icon]</div>
+                    <div>
+                        <div style="font-weight: bold; font-size: 14px;">Facebook IKAPSI UNDIP</div>
+                        <div style="font-size: 14px; color: #666;">@ikapsiundip</div>
+                    </div>
+                </div>
+
+                <div class="contact-card" style="background: #ffffff; padding: 20px; display: flex; align-items: center; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                    <div class="icon" style="margin-right: 15px; color: #d81b60;">[Email Icon]</div>
+                    <div>
+                        <div style="font-weight: bold; font-size: 14px;">Email</div>
+                        <div style="font-size: 14px; color: #666;">psikologi@undip.ac.id</div>
+                    </div>
+                </div>
+
+                <div class="contact-card" style="background: #ffffff; padding: 20px; display: flex; align-items: center; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                    <div class="icon" style="margin-right: 15px; color: #d81b60;">[Telp Icon]</div>
+                    <div>
+                        <div style="font-weight: bold; font-size: 14px;">Telepon</div>
+                        <div style="font-size: 14px; color: #666;">024-123456789</div>
+                    </div>
+                </div>
+
+                <div class="contact-card" style="background: #ffffff; padding: 20px; display: flex; align-items: center; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                    <div class="icon" style="margin-right: 15px; color: #d81b60;">[Map Icon]</div>
+                    <div>
+                        <div style="font-weight: bold; font-size: 14px;">Sekretariat IKAPSI UNDIP</div>
+                        <div style="font-size: 14px; color: #666;">Google Map</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<?php
+get_footer(); // Memanggil file footer.php
+?>
