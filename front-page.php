@@ -194,31 +194,59 @@ get_header(); ?>
                 $cek_kontak = get_field('kontak_1_label'); 
 
                 if ($cek_kontak) :
-                    for ($i = 1; $i <= 3; $i++) :
+                    // Mengubah batasan dari 3 menjadi 6 agar semua kolom tampil
+                    for ($i = 1; $i <= 6; $i++) :
                         $logo_url = get_field('kontak_' . $i . '_logo');
                         $label = get_field('kontak_' . $i . '_label');
                         $deskripsi = get_field('kontak_' . $i . '_deskripsi');
                         $action_url = get_field('kontak_' . $i . '_url');
 
+                        // Logika Cerdas: Cek apakah field ini diisi dengan format email
+                        if ($action_url && filter_var($action_url, FILTER_VALIDATE_EMAIL)) {
+                            $action_url = 'mailto:' . $action_url;
+                        }
+
                         if ($label) : 
+                            if ($action_url) :
+                                // Jika URL ada isinya, render sebagai tombol klik <a>
                 ?>
-                            <a href="<?php echo esc_url($action_url ? $action_url : '#'); ?>" target="_blank" class="kontak-card" style="background: #ffffff; padding: 25px; border-radius: 6px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; align-items: center; text-decoration: none; color: inherit; transition: transform 0.3s ease, box-shadow 0.3s ease;">
-                                
-                                <div style="width: 50px; height: 50px; background: rgba(215,70,144,0.1); border-radius: 50%; display: flex; justify-content: center; align-items: center; margin-right: 15px; overflow: hidden; flex-shrink: 0;">
-                                    <?php if ($logo_url) : ?>
-                                        <img src="<?php echo esc_url($logo_url); ?>" style="width: 60%; height: 60%; object-fit: contain;">
-                                    <?php else: ?>
-                                        <span style="color: #D74690; font-weight: bold;">#</span>
-                                    <?php endif; ?>
+                                <a href="<?php echo esc_url($action_url); ?>" target="_blank" class="kontak-card" style="background: #ffffff; padding: 25px; border-radius: 6px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; align-items: center; text-decoration: none; color: inherit; transition: transform 0.3s ease, box-shadow 0.3s ease;">
+                                    
+                                    <div style="width: 50px; height: 50px; background: rgba(215,70,144,0.1); border-radius: 50%; display: flex; justify-content: center; align-items: center; margin-right: 15px; overflow: hidden; flex-shrink: 0;">
+                                        <?php if ($logo_url) : ?>
+                                            <img src="<?php echo esc_url($logo_url); ?>" style="width: 60%; height: 60%; object-fit: contain;">
+                                        <?php else: ?>
+                                            <span style="color: #D74690; font-weight: bold;">#</span>
+                                        <?php endif; ?>
+                                    </div>
+                                    
+                                    <div>
+                                        <div style="font-weight: 600; color: #D74690;"><?php echo esc_html($label); ?></div>
+                                        <div style="font-size: 14px; color: #666; margin-top: 3px;"><?php echo esc_html($deskripsi); ?></div>
+                                    </div>
+                                    
+                                </a>
+                <?php       else : 
+                                // Jika URL Kosong, render sebagai div statis biasa
+                ?>
+                                <div class="kontak-card" style="background: #ffffff; padding: 25px; border-radius: 6px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; align-items: center; text-decoration: none; color: inherit; transition: transform 0.3s ease, box-shadow 0.3s ease;">
+                                    
+                                    <div style="width: 50px; height: 50px; background: rgba(215,70,144,0.1); border-radius: 50%; display: flex; justify-content: center; align-items: center; margin-right: 15px; overflow: hidden; flex-shrink: 0;">
+                                        <?php if ($logo_url) : ?>
+                                            <img src="<?php echo esc_url($logo_url); ?>" style="width: 60%; height: 60%; object-fit: contain;">
+                                        <?php else: ?>
+                                            <span style="color: #D74690; font-weight: bold;">#</span>
+                                        <?php endif; ?>
+                                    </div>
+                                    
+                                    <div>
+                                        <div style="font-weight: 600; color: #D74690;"><?php echo esc_html($label); ?></div>
+                                        <div style="font-size: 14px; color: #666; margin-top: 3px;"><?php echo esc_html($deskripsi); ?></div>
+                                    </div>
+                                    
                                 </div>
-                                
-                                <div>
-                                    <div style="font-weight: 600; color: #D74690;"><?php echo esc_html($label); ?></div>
-                                    <div style="font-size: 14px; color: #666; margin-top: 3px;"><?php echo esc_html($deskripsi); ?></div>
-                                </div>
-                                
-                            </a>
                 <?php 
+                            endif;
                         endif;
                     endfor;
 
