@@ -63,22 +63,24 @@ get_header('internal'); ?>
     .kolaborasi-img-wrapper { 
         flex: 1; 
         min-width: 300px; 
-        padding: 30px 0 40px 40px; /* Ruang untuk dekorasi background & card */
+        padding: 30px 0 40px 0; /* Padding disesuaikan agar terpusat */
+        display: flex;
+        justify-content: center; /* Memastikan container selalu di tengah */
     }
     
     .k-img-container { 
         position: relative; 
         width: 100%; 
-        max-width: 550px; 
+        max-width: 500px; /* Ukuran dibatasi agar proporsional */
         margin: 0 auto; 
     }
     
-    /* Dekorasi latar belakang abu-abu yang bergeser ke kiri atas */
+    /* Dekorasi latar belakang abu-abu */
     .k-img-container::before { 
         content: ''; 
         position: absolute; 
-        top: -25px; 
-        left: -25px; 
+        top: -20px; 
+        left: -20px; 
         width: 100%; 
         height: 100%; 
         background-color: #f4f5f7; 
@@ -97,16 +99,19 @@ get_header('internal'); ?>
         display: block; 
     }
     
+    /* Perbaikan Posisi & Transparansi Floating Card */
     .floating-card { 
         position: absolute; 
-        bottom: -35px; /* Menjorok ke bawah */
-        left: -40px;   /* Menjorok ke kiri */
-        background: #fff; 
+        bottom: -30px; 
+        left: 50%; /* Pindah ke tengah */
+        transform: translateX(-50%); /* Penyesuaian ke tengah sempurna */
+        background: rgba(255, 255, 255, 0.90); /* Latar transparan (tidak 100% putih) */
+        backdrop-filter: blur(8px); /* Efek kaca buram elegan */
         padding: 25px 30px; 
         border-radius: 12px; 
-        box-shadow: 0 15px 40px rgba(0,0,0,0.08); 
-        width: calc(100% - 20px); 
-        max-width: 420px; 
+        box-shadow: 0 15px 40px rgba(0,0,0,0.1); 
+        width: 90%; /* Mengisi 90% dari lebar gambar, memberi margin imbang di kiri & kanan */
+        max-width: 450px; 
         z-index: 2; 
         display: flex; 
         flex-direction: column; 
@@ -154,7 +159,7 @@ get_header('internal'); ?>
     @media (max-width: 768px) {
         .kolaborasi-section { flex-direction: column; }
         .kolaborasi-img-wrapper { padding: 30px 20px 40px 20px; margin-bottom: 50px; }
-        .floating-card { left: 10px; width: calc(100% - 20px); bottom: -30px; }
+        .floating-card { width: 95%; bottom: -30px; }
         .bottom-banner { flex-direction: column; text-align: center; }
     }
 </style>
@@ -290,7 +295,7 @@ get_header('internal'); ?>
         </div>
         
         <div class="kolaborasi-img-wrapper">
-            <!-- Container baru agar absolute styling bekerja sempurna -->
+            <!-- Container gambar -->
             <div class="k-img-container">
                 <img src="<?php echo esc_url($k_img ? $k_img : get_template_directory_uri().'/images/dummy-office.jpg'); ?>" alt="Kolaborasi">
                 
