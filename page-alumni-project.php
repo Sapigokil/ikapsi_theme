@@ -39,7 +39,7 @@ get_header('internal'); ?>
     .p-badge { position: absolute; top: 15px; left: 15px; background: rgba(255,255,255,0.95); color: #D74690; padding: 5px 15px; border-radius: 20px; font-size: 11px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
     
     .p-card-body { padding: 30px; position: relative; }
-    .p-icon-circle { width: 50px; height: 50px; background: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; position: absolute; top: -25px; left: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); color: #D74690; font-size: 20px; font-weight: bold; }
+    .p-icon-circle { width: 50px; height: 50px; background: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; position: absolute; top: -25px; left: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); color: #D74690; font-size: 20px; font-weight: bold; overflow: hidden; }
     .p-card-body h3 { font-size: 20px; margin: 15px 0 10px; font-family: 'Segoe UI', sans-serif; font-weight: 700; color: #4A0A1F; }
     .p-card-body p { font-size: 14px; color: #96757F; line-height: 1.6; margin-bottom: 20px; }
     .p-card-link { font-size: 13px; font-weight: 700; color: #4A0A1F; text-decoration: none; text-transform: uppercase; letter-spacing: 0.5px; }
@@ -125,18 +125,24 @@ get_header('internal'); ?>
 
         <div class="program-grid">
             <?php
+            // Memanggil CPT yang diurutkan berdasarkan field urutan_project
             $args = array(
                 'post_type'      => 'alumni_project',
-                'posts_per_page' => 3, // Mengambil 3 project terbaru
-                'post_status'    => 'publish'
+                'posts_per_page' => 3, // Mengambil 3 project 
+                'post_status'    => 'publish',
+                'meta_key'       => 'urutan_project',
+                'orderby'        => 'meta_value_num',
+                'order'          => 'ASC'
             );
             $query_project = new WP_Query($args);
 
             if ($query_project->have_posts()) :
                 while ($query_project->have_posts()) : $query_project->the_post();
-                    // Ambil status dari ACF yang baru saja dibuat
+                    // Ambil status & ikon dari ACF 
                     $status = get_field('status_project');
                     if (!$status) { $status = 'ACTIVE'; } // Default fallback
+
+                    $ikon = get_field('ikon_project');
             ?>
                     <div class="program-card">
                         <div class="p-card-img">
@@ -148,7 +154,16 @@ get_header('internal'); ?>
                             <?php endif; ?>
                         </div>
                         <div class="p-card-body">
-                            <div class="p-icon-circle">⊛</div> <!-- Ikon default statis -->
+                            
+                            <!-- Ikon Dinamis -->
+                            <div class="p-icon-circle">
+                                <?php if ($ikon) : ?>
+                                    <img src="<?php echo esc_url($ikon); ?>" alt="Ikon Project" style="width: 25px; height: 25px; object-fit: contain;">
+                                <?php else : ?>
+                                    ⊛
+                                <?php endif; ?>
+                            </div>
+                            
                             <h3><?php the_title(); ?></h3>
                             <p><?php echo wp_trim_words(get_the_excerpt(), 15, '...'); ?></p>
                             <a href="<?php the_permalink(); ?>" class="p-card-link">Lihat Detail →</a>
