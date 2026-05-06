@@ -11,9 +11,25 @@ get_header(); ?>
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
 <style>
-    /* Slider Styling */
-    .hero-swiper { width: 100%; height: 450px; position: relative; }
-    .swiper-slide { background-position: center; background-size: cover; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 50px; }
+    /* Slider Styling - BEST PRACTICE (Aspect Ratio) */
+    .hero-swiper { 
+        width: 100%; 
+        aspect-ratio: 21 / 9; /* Lebar 100%, Tinggi akan mengikuti rasio ini */
+        min-height: 250px; /* Batas aman terkecil agar tidak terlalu tipis */
+        max-height: 700px; /* Batas aman terbesar agar tidak terlalu raksasa */
+        position: relative; 
+    }
+    
+    .swiper-slide { 
+        background-position: center; 
+        background-size: cover; 
+        background-repeat: no-repeat;
+        display: flex; 
+        align-items: flex-end; 
+        justify-content: center; 
+        padding-bottom: 50px; 
+    }
+    
     .swiper-pagination-bullet-active { background: #D74690 !important; }
     .swiper-pagination-bullet { background: #fff; opacity: 1; width: 12px; height: 12px; }
     .slide-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(0,0,0,0) 60%, rgba(0,0,0,0.3) 100%); pointer-events: none; }
@@ -34,6 +50,23 @@ get_header(); ?>
         width: 100%;
         height: 100%;
         border: 0;
+    }
+
+    /* Penyesuaian khusus untuk HP (Mobile) */
+    @media (max-width: 768px) {
+        .hero-swiper {
+            aspect-ratio: 16 / 9; /* Di HP, rasionya diubah agar tidak terlalu kurus/gepeng */
+        }
+        .join-button-wrapper {
+            right: 50% !important;
+            transform: translateX(50%); /* Menengahkan tombol di layar HP */
+            bottom: -20px !important;
+        }
+        .section-header {
+            flex-direction: column;
+            align-items: flex-start !important;
+            gap: 10px;
+        }
     }
 </style>
 
@@ -62,6 +95,8 @@ get_header(); ?>
             </div>
             <div class="swiper-pagination"></div>
         </div>
+        
+        <!-- Tombol Join -->
         <div class="join-button-wrapper" style="position: absolute; right: 8%; bottom: -25px; z-index: 99;">
             <a href="#" class="btn-join" style="display: inline-block; background-color: #D74690; color: #ffffff; padding: 18px 40px; text-decoration: none; font-weight: bold; font-size: 16px; border-radius: 4px; box-shadow: 0 4px 15px rgba(215,70,144,0.4);">JOIN NOW</a>
         </div>
@@ -70,10 +105,17 @@ get_header(); ?>
     <!-- 2. INFO TERBARU SECTION -->
     <section class="info-terbaru-section" style="padding: 100px 0 40px;">
         <div class="container" style="max-width: 1350px; margin: 0 auto; padding: 0 20px;">
-            <h2 style="color: #D74690; margin-bottom: 40px; font-size: 24px; font-weight: 600;">Info Terbaru</h2>
+            
+            <!-- Menggunakan Flexbox agar tombol "Info Lainnya" sejajar ke kanan -->
+            <div class="section-header" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px;">
+                <h2 style="color: #D74690; margin: 0; font-size: 24px; font-weight: 600;">Info Terbaru</h2>
+                <a href="<?php echo get_permalink( get_option( 'page_for_posts' ) ); ?>" style="color: #D74690; font-size: 15px; font-weight: 600; text-decoration: none;">Info Lainnya >></a>
+            </div>
+
             <div class="row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
                 <?php
-                $query_info = new WP_Query(array('post_type' => 'post', 'posts_per_page' => 3, 'category_name' => 'berita'));
+                // Query diubah: menampilkan HANYA 3 post terbaru dari SEMUA kategori
+                $query_info = new WP_Query(array('post_type' => 'post', 'posts_per_page' => 3));
                 if ($query_info->have_posts()) : while ($query_info->have_posts()) : $query_info->the_post(); ?>
                     <div class="card" style="border: 1px solid #eaeaea; border-radius: 4px; overflow: hidden; background: #fff;">
                         <div class="thumbnail" style="height: 220px;"><?php if (has_post_thumbnail()) the_post_thumbnail('medium', array('style' => 'width:100%; height:100%; object-fit:cover;')); ?></div>
@@ -117,7 +159,6 @@ get_header(); ?>
                         </div>
                         <div class="thumbnail" style="height: 220px;"><?php if (has_post_thumbnail()) the_post_thumbnail('medium', array('style' => 'width:100%; height:100%; object-fit:cover;')); ?></div>
                         
-                        <!-- Penambahan Deskripsi Excerpt di sini -->
                         <div class="content" style="padding: 25px 20px;">
                             <h3 style="font-size: 18px; color: #D74690; margin: 0 0 15px 0; font-weight: 600;"><?php the_title(); ?></h3>
                             <p style="font-size: 14px; color: #555; margin-bottom: 25px; line-height: 1.6;"><?php echo wp_trim_words(get_the_excerpt(), 15, '...'); ?></p>
@@ -194,21 +235,18 @@ get_header(); ?>
                 $cek_kontak = get_field('kontak_1_label'); 
 
                 if ($cek_kontak) :
-                    // Mengubah batasan dari 3 menjadi 6 agar semua kolom tampil
                     for ($i = 1; $i <= 6; $i++) :
                         $logo_url = get_field('kontak_' . $i . '_logo');
                         $label = get_field('kontak_' . $i . '_label');
                         $deskripsi = get_field('kontak_' . $i . '_deskripsi');
                         $action_url = get_field('kontak_' . $i . '_url');
 
-                        // Logika Cerdas: Cek apakah field ini diisi dengan format email
                         if ($action_url && filter_var($action_url, FILTER_VALIDATE_EMAIL)) {
                             $action_url = 'mailto:' . $action_url;
                         }
 
                         if ($label) : 
                             if ($action_url) :
-                                // Jika URL ada isinya, render sebagai tombol klik <a>
                 ?>
                                 <a href="<?php echo esc_url($action_url); ?>" target="_blank" class="kontak-card" style="background: #ffffff; padding: 25px; border-radius: 6px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; align-items: center; text-decoration: none; color: inherit; transition: transform 0.3s ease, box-shadow 0.3s ease;">
                                     
@@ -226,9 +264,7 @@ get_header(); ?>
                                     </div>
                                     
                                 </a>
-                <?php       else : 
-                                // Jika URL Kosong, render sebagai div statis biasa
-                ?>
+                <?php       else : ?>
                                 <div class="kontak-card" style="background: #ffffff; padding: 25px; border-radius: 6px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; align-items: center; text-decoration: none; color: inherit; transition: transform 0.3s ease, box-shadow 0.3s ease;">
                                     
                                     <div style="width: 50px; height: 50px; background: rgba(215,70,144,0.1); border-radius: 50%; display: flex; justify-content: center; align-items: center; margin-right: 15px; overflow: hidden; flex-shrink: 0;">
