@@ -8,7 +8,7 @@ get_header('internal'); ?>
 
 <style>
     /* Styling Dasar Halaman Forum */
-    body { background-color: #fafafa; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: #f8f9fa; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
     
     .forum-container { 
         max-width: 1200px; 
@@ -24,13 +24,13 @@ get_header('internal'); ?>
     }
     .forum-header h1 { 
         font-size: 42px; 
-        color: #2d2424; 
+        color: #4A0A1F; 
         margin-bottom: 15px; 
         font-weight: bold; 
-        font-family: Georgia, serif; 
+        font-family: 'Georgia', serif; 
     }
     .forum-header h1 span { color: #D74690; font-style: italic; }
-    .forum-header p { color: #666; font-size: 16px; max-width: 600px; margin: 0 auto; line-height: 1.6;}
+    .forum-header p { color: #96757F; font-size: 16px; max-width: 600px; margin: 0 auto; line-height: 1.6;}
     
     /* ==========================================================================
        CSS OVERRIDE UNTUK BBPRESS (MENGUBAH TAMPILAN KAKU MENJADI MODERN)
@@ -39,44 +39,44 @@ get_header('internal'); ?>
     /* Reset & Ukuran Font Dasar */
     #bbpress-forums { font-size: 14px; color: #444; }
 
-    /* Membuang border bawaan dan membuat kotak melayang ala Card */
+    /* Membuang border bawaan, menambahkan warna Soft Pink, Garis Tegas, dan Shadow */
     #bbpress-forums ul.bbp-lead-topic, 
     #bbpress-forums ul.bbp-topics, 
     #bbpress-forums ul.bbp-forums, 
     #bbpress-forums ul.bbp-replies, 
     #bbpress-forums ul.bbp-search-results {
-        border: none !important;
+        background-color: #FFF0F6 !important; /* Latar Soft Pink */
+        border: 2px solid #F2D1E0 !important; /* Garis batas tegas */
         border-radius: 12px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.04);
-        background: #fff;
+        box-shadow: 0 10px 40px rgba(74, 10, 31, 0.08); /* Bayangan mengambang */
         margin-bottom: 30px !important;
         overflow: hidden;
     }
 
     /* Baris Judul Kolom (Header Tabel Forum) */
     #bbpress-forums li.bbp-header {
-        background-color: #fdfdfd !important; 
-        border-bottom: 1px solid #eaeaea !important;
+        background-color: #4A0A1F !important; /* Warna Maroon agar senada dengan konsep tabel */
+        border-bottom: 1px solid #4A0A1F !important;
         padding: 18px 25px !important;
     }
     #bbpress-forums li.bbp-header ul li {
-        color: #888 !important;
-        font-weight: 700;
+        color: #ffffff !important; /* Teks putih agar terbaca di atas background gelap */
+        font-weight: 600;
         text-transform: uppercase;
-        font-size: 11px;
-        letter-spacing: 1.5px;
+        font-size: 12px;
+        letter-spacing: 1px;
     }
 
     /* Baris Isi Forum / Topik (Hover Effect) */
     #bbpress-forums li.bbp-body ul.forum, 
     #bbpress-forums li.bbp-body ul.topic {
         padding: 25px !important;
-        border-bottom: 1px solid #f5f5f5 !important;
+        border-bottom: 1px solid #F2D1E0 !important; /* Garis pemisah baris */
         transition: background-color 0.3s ease, transform 0.2s ease;
     }
     #bbpress-forums li.bbp-body ul.forum:hover, 
     #bbpress-forums li.bbp-body ul.topic:hover {
-        background-color: rgba(215,70,144,0.02) !important;
+        background-color: rgba(215,70,144,0.05) !important; /* Hover state lebih gelap sedikit */
     }
     #bbpress-forums li.bbp-body ul.forum:last-child, 
     #bbpress-forums li.bbp-body ul.topic:last-child {
@@ -88,7 +88,7 @@ get_header('internal'); ?>
     #bbpress-forums a.bbp-topic-permalink {
         font-size: 18px;
         font-weight: 700;
-        color: #2d2424 !important;
+        color: #4A0A1F !important;
         text-decoration: none;
         display: block;
         margin-bottom: 8px;
@@ -102,7 +102,7 @@ get_header('internal'); ?>
     /* Teks Deskripsi di bawah Judul */
     #bbpress-forums div.bbp-forum-content {
         font-size: 13px;
-        color: #777; 
+        color: #96757F; 
         font-weight: 400;
         line-height: 1.5;
     }
@@ -114,7 +114,7 @@ get_header('internal'); ?>
     #bbpress-forums li.bbp-topic-reply-count {
         font-size: 15px;
         font-weight: 700;
-        color: #D74690;
+        color: #4A0A1F;
         text-align: center;
     }
 
@@ -122,12 +122,12 @@ get_header('internal'); ?>
     #bbpress-forums li.bbp-forum-freshness, 
     #bbpress-forums li.bbp-topic-freshness {
         font-size: 12px;
-        color: #999;
+        color: #96757F;
         text-align: center;
     }
     #bbpress-forums li.bbp-forum-freshness a, 
     #bbpress-forums li.bbp-topic-freshness a {
-        color: #666 !important;
+        color: #4A0A1F !important;
         text-decoration: none;
         font-weight: 600;
     }
@@ -149,8 +149,8 @@ get_header('internal'); ?>
         float: none !important;
         margin-bottom: 25px !important;
         font-size: 12px !important;
-        color: #999 !important;
-        background: #fff;
+        color: #96757F !important;
+        background: #fff; /* Tetap putih agar menonjol dari background abu-abu */
         display: inline-block;
         padding: 10px 20px;
         border-radius: 30px;
