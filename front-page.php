@@ -14,9 +14,9 @@ get_header(); ?>
     /* Slider Styling - BEST PRACTICE (Aspect Ratio) */
     .hero-swiper { 
         width: 100%; 
-        aspect-ratio: 21 / 9; /* Lebar 100%, Tinggi akan mengikuti rasio ini */
-        min-height: 250px; /* Batas aman terkecil agar tidak terlalu tipis */
-        max-height: 700px; /* Batas aman terbesar agar tidak terlalu raksasa */
+        aspect-ratio: 16 / 9; /* Lebar 100%, Tinggi mengikuti rasio standar 16:9 */
+        min-height: 250px; 
+        max-height: 900px; /* Batas aman dinaikkan agar mengakomodasi tinggi 16:9 di layar PC besar */
         position: relative; 
     }
     
@@ -55,7 +55,7 @@ get_header(); ?>
     /* Penyesuaian khusus untuk HP (Mobile) */
     @media (max-width: 768px) {
         .hero-swiper {
-            aspect-ratio: 16 / 9; /* Di HP, rasionya diubah agar tidak terlalu kurus/gepeng */
+            aspect-ratio: 4 / 3; /* Di HP layar vertikal, rasio 4:3 lebih ideal agar gambar tidak terlalu pipih */
         }
         .join-button-wrapper {
             right: 50% !important;
