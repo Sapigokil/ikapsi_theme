@@ -11,26 +11,38 @@ get_header(); ?>
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
 <style>
-    /* Slider Styling - OPSI 3 (Murni Aspect Ratio tanpa batasan tinggi) */
+    /* Slider Styling - OPSI 1 (Tag IMG Murni dengan Rasio 21:7) */
     .hero-swiper { 
         width: 100%; 
-        aspect-ratio: 21 / 9; /* Lebar 100%, Tinggi murni mengikuti rasio 21:9 */
         position: relative; 
     }
     
     .swiper-slide { 
-        background-position: center; 
-        background-size: cover; 
-        background-repeat: no-repeat;
-        display: flex; 
-        align-items: flex-end; 
-        justify-content: center; 
-        padding-bottom: 50px; 
+        position: relative;
+        display: block; /* Diubah menjadi block agar image merender natural */
+    }
+
+    .hero-img-element {
+        width: 100%;
+        height: auto;
+        display: block;
+        aspect-ratio: 21 / 7; /* Kunci rasio sesuai resolusi 1700x565 */
+        object-fit: cover; /* Perlindungan ekstra untuk gambar yang rasionya meleset */
     }
     
     .swiper-pagination-bullet-active { background: #D74690 !important; }
     .swiper-pagination-bullet { background: #fff; opacity: 1; width: 12px; height: 12px; }
-    .slide-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(0,0,0,0) 60%, rgba(0,0,0,0.3) 100%); pointer-events: none; }
+    
+    .slide-overlay { 
+        position: absolute; 
+        top: 0; 
+        left: 0; 
+        width: 100%; 
+        height: 100%; 
+        background: linear-gradient(to bottom, rgba(0,0,0,0) 60%, rgba(0,0,0,0.3) 100%); 
+        pointer-events: none; 
+        z-index: 2;
+    }
     
     /* Video Container Responsive */
     .video-responsive {
@@ -52,8 +64,9 @@ get_header(); ?>
 
     /* Penyesuaian khusus untuk HP (Mobile) */
     @media (max-width: 768px) {
-        .hero-swiper {
-            aspect-ratio: 16 / 9; /* Di HP rasionya disesuaikan agar tidak terlalu pipih/gepeng, tetap tanpa min/max height */
+        .hero-img-element {
+            /* Di HP layar vertikal, rasio 21:7 terlalu tipis. Diubah ke 16:9 agar tombol wajar posisinya */
+            aspect-ratio: 16 / 9; 
         }
         .join-button-wrapper {
             right: 50% !important;
@@ -81,17 +94,26 @@ get_header(); ?>
                     if ($img_url) : 
                         $has_slides = true;
                 ?>
-                    <div class="swiper-slide" style="background-image: url('<?php echo esc_url($img_url); ?>');">
+                    <!-- Menggunakan tag <img> murni sesuai Opsi 1 -->
+                    <div class="swiper-slide">
+                        <img src="<?php echo esc_url($img_url); ?>" alt="Banner Hero IKAPSI UNDIP" class="hero-img-element">
                         <div class="slide-overlay"></div>
                     </div>
                 <?php 
                     endif;
                 } 
                 if (!$has_slides) : ?>
-                    <div class="swiper-slide" style="background-color: #e0e0e0;"><p style="color: #666;">Upload gambar hero di ACF Beranda</p></div>
+                    <div class="swiper-slide">
+                        <!-- Kotak abu-abu jika belum ada gambar -->
+                        <div class="hero-img-element" style="background-color: #e0e0e0; display:flex; align-items:center; justify-content:center;">
+                            <p style="color: #666; margin:0;">Upload gambar hero (Rekomendasi 1700x565 px) di ACF Beranda</p>
+                        </div>
+                    </div>
                 <?php endif; ?>
             </div>
-            <div class="swiper-pagination"></div>
+            
+            <!-- Posisi navigasi titik digeser ke atas sedikit agar tidak tertutup tombol Join -->
+            <div class="swiper-pagination" style="bottom: 30px; z-index: 10;"></div>
         </div>
         
         <!-- Tombol Join -->
