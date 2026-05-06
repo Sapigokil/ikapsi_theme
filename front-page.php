@@ -11,12 +11,10 @@ get_header(); ?>
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
 <style>
-    /* Slider Styling - BEST PRACTICE (Aspect Ratio) */
+    /* Slider Styling - OPSI 3 (Murni Aspect Ratio tanpa batasan tinggi) */
     .hero-swiper { 
         width: 100%; 
-        aspect-ratio: 21 / 9; /* Lebar 100%, Tinggi akan mengikuti rasio ini */
-        min-height: 250px; /* Batas aman terkecil agar tidak terlalu tipis */
-        max-height: 700px; /* Batas aman terbesar agar tidak terlalu raksasa */
+        aspect-ratio: 21 / 9; /* Lebar 100%, Tinggi murni mengikuti rasio 21:9 */
         position: relative; 
     }
     
@@ -55,7 +53,7 @@ get_header(); ?>
     /* Penyesuaian khusus untuk HP (Mobile) */
     @media (max-width: 768px) {
         .hero-swiper {
-            aspect-ratio: 16 / 9; /* Di HP, rasionya diubah agar tidak terlalu kurus/gepeng */
+            aspect-ratio: 16 / 9; /* Di HP rasionya disesuaikan agar tidak terlalu pipih/gepeng, tetap tanpa min/max height */
         }
         .join-button-wrapper {
             right: 50% !important;
