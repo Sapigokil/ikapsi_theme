@@ -19,7 +19,7 @@ get_header(); ?>
     
     .swiper-slide { 
         position: relative;
-        display: block; /* Diubah menjadi block agar image merender natural */
+        display: block; 
     }
 
     .hero-img-element {
@@ -27,7 +27,7 @@ get_header(); ?>
         height: auto;
         display: block;
         aspect-ratio: 21 / 7; /* Kunci rasio sesuai resolusi 1700x565 */
-        object-fit: cover; /* Perlindungan ekstra untuk gambar yang rasionya meleset */
+        object-fit: cover; 
     }
     
     .swiper-pagination-bullet-active { background: #D74690 !important; }
@@ -65,12 +65,11 @@ get_header(); ?>
     /* Penyesuaian khusus untuk HP (Mobile) */
     @media (max-width: 768px) {
         .hero-img-element {
-            /* Di HP layar vertikal, rasio 21:7 terlalu tipis. Diubah ke 16:9 agar tombol wajar posisinya */
             aspect-ratio: 16 / 9; 
         }
         .join-button-wrapper {
             right: 50% !important;
-            transform: translateX(50%); /* Menengahkan tombol di layar HP */
+            transform: translateX(50%); 
             bottom: -20px !important;
         }
         .section-header {
@@ -94,7 +93,6 @@ get_header(); ?>
                     if ($img_url) : 
                         $has_slides = true;
                 ?>
-                    <!-- Menggunakan tag <img> murni sesuai Opsi 1 -->
                     <div class="swiper-slide">
                         <img src="<?php echo esc_url($img_url); ?>" alt="Banner Hero IKAPSI UNDIP" class="hero-img-element">
                         <div class="slide-overlay"></div>
@@ -104,7 +102,6 @@ get_header(); ?>
                 } 
                 if (!$has_slides) : ?>
                     <div class="swiper-slide">
-                        <!-- Kotak abu-abu jika belum ada gambar -->
                         <div class="hero-img-element" style="background-color: #e0e0e0; display:flex; align-items:center; justify-content:center;">
                             <p style="color: #666; margin:0;">Upload gambar hero (Rekomendasi 1700x565 px) di ACF Beranda</p>
                         </div>
@@ -112,7 +109,6 @@ get_header(); ?>
                 <?php endif; ?>
             </div>
             
-            <!-- Posisi navigasi titik digeser ke atas sedikit agar tidak tertutup tombol Join -->
             <div class="swiper-pagination" style="bottom: 30px; z-index: 10;"></div>
         </div>
         
@@ -126,7 +122,6 @@ get_header(); ?>
     <section class="info-terbaru-section" style="padding: 100px 0 40px;">
         <div class="container" style="max-width: 1350px; margin: 0 auto; padding: 0 20px;">
             
-            <!-- Menggunakan Flexbox agar tombol "Info Lainnya" sejajar ke kanan -->
             <div class="section-header" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px;">
                 <h2 style="color: #D74690; margin: 0; font-size: 24px; font-weight: 600;">Info Terbaru</h2>
                 <a href="<?php echo get_permalink( get_option( 'page_for_posts' ) ); ?>" style="color: #D74690; font-size: 15px; font-weight: 600; text-decoration: none;">Info Lainnya >></a>
@@ -134,7 +129,6 @@ get_header(); ?>
 
             <div class="row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
                 <?php
-                // Query diubah: menampilkan HANYA 3 post terbaru dari SEMUA kategori
                 $query_info = new WP_Query(array('post_type' => 'post', 'posts_per_page' => 3));
                 if ($query_info->have_posts()) : while ($query_info->have_posts()) : $query_info->the_post(); ?>
                     <div class="card" style="border: 1px solid #eaeaea; border-radius: 4px; overflow: hidden; background: #fff;">
@@ -156,7 +150,14 @@ get_header(); ?>
     <!-- 3. EVENT SECTION -->
     <section class="event-section" style="padding: 40px 0 60px;">
         <div class="container" style="max-width: 1350px; margin: 0 auto; padding: 0 20px;">
-            <h2 style="color: #D74690; margin-bottom: 40px; font-size: 24px; font-weight: 600;">Event dan Pelatihan</h2>
+            
+            <!-- Menggunakan Flexbox agar tombol "Event Lainnya" sejajar ke kanan -->
+            <div class="section-header" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px;">
+                <h2 style="color: #D74690; margin: 0; font-size: 24px; font-weight: 600;">Event dan Pelatihan</h2>
+                <!-- Link di bawah ini sudah diarahkan ke halaman yang baru saja Anda buat -->
+                <a href="https://ikapsiundip.or.id/daftar-event/" style="color: #D74690; font-size: 15px; font-weight: 600; text-decoration: none;">Event Lainnya >></a>
+            </div>
+
             <div class="row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
                 <?php
                 $query_event = new WP_Query(array('post_type' => 'agenda_event', 'posts_per_page' => 3));
