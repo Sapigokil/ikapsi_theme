@@ -85,15 +85,30 @@
 
             <nav id="site-navigation" class="main-navigation">
                 <?php
+                // Menyiapkan tautan Logout jika pengguna sudah login
+                $logout_item = '';
+                if ( is_user_logged_in() ) {
+                    // Menggunakan wp_logout_url agar aman dan langsung dialihkan ke beranda setelah keluar
+                    $logout_url  = esc_url( wp_logout_url( home_url() ) );
+                    $logout_item = '<li><a href="' . $logout_url . '">LOGOUT</a></li>';
+                }
+
                 if ( has_nav_menu( 'primary' ) ) {
                     wp_nav_menu( array(
                         'theme_location' => 'primary',
                         'menu_id'        => 'primary-menu',
                         'container'      => false, 
-                        'fallback_cb'    => false, 
+                        'fallback_cb'    => false,
+                        // Menyisipkan tautan logout di bagian paling akhir struktur daftar menu (ul)
+                        'items_wrap'     => '<ul id="%1$s" class="%2$s">%3$s' . $logout_item . '</ul>',
                     ) );
                 } else {
-                    echo '<p style="color: #888; font-size: 12px; margin-top: 15px;"><em>Silakan buat dan atur Menu di Dashboard WP untuk menampilkannya di sini.</em></p>';
+                    // Jika menu belum diatur, tampilkan pesan atau tampilkan tombol logout saja jika login
+                    if ( is_user_logged_in() ) {
+                        echo '<ul>' . $logout_item . '</ul>';
+                    } else {
+                        echo '<p style="color: #888; font-size: 12px; margin-top: 15px;"><em>Silakan buat dan atur Menu di Dashboard WP untuk menampilkannya di sini.</em></p>';
+                    }
                 }
                 ?>
             </nav>
