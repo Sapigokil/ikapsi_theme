@@ -253,3 +253,69 @@ function filter_artikel_ajax() {
 }
 add_action('wp_ajax_filter_artikel', 'filter_artikel_ajax');
 add_action('wp_ajax_nopriv_filter_artikel', 'filter_artikel_ajax');
+
+/**
+ * Logika Keamanan Halaman Login Custom
+ */
+
+// 1. Alihkan wp-login.php ke halaman login buatan kita (Dengan Pengecualian Admin)
+add_action('init', 'redirect_login_page');
+function redirect_login_page() {
+    $login_page  = home_url( '/login/' );
+    $page_viewed = basename(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
+
+    if ( $page_viewed == "wp-login.php" && $_SERVER['REQUEST_METHOD'] == 'GET' ) {
+        
+        // Pengecualian 1: Jika admin mengakses wp-admin secara langsung (otomatis ada parameter redirect_to=wp-admin)
+        if ( isset($_GET['redirect_to']) && strpos($_GET['redirect_to'], 'wp-admin') !== false ) {
+            return; // Hentikan fungsi, biarkan halaman login WP terbuka
+        }
+
+        // Pengecualian 2: Akses rahasia manual (wp-login.php?admin_bypass=true)
+        if ( isset($_GET['admin_bypass']) && $_GET['admin_bypass'] == 'true' ) {
+            return; // Hentikan fungsi, biarkan halaman login WP terbuka
+        }
+
+        // Pengecualian 3: Jangan redirect jika sedang melakukan reset password atau logout
+        if ( isset($_GET['action']) && in_array($_GET['action'], array('logout', 'lostpassword', 'rp', 'resetpass')) ) {
+            return;
+        }
+
+        // Jika bukan admin, lempar ke halaman login custom
+        wp_redirect($login_page);
+        exit;
+    }
+}
+
+// 2. Handle jika login gagal agar tetap di halaman custom (bukan dilempar ke wp-login.php)
+add_action( 'wp_login_failed', 'login_failed_redirect' );
+function login_failed_redirect( $username ) {
+    // Jika yang gagal login mencoba masuk lewat wp-admin, biarkan di wp-login.php
+    $referrer = wp_get_referer();
+    if ( $referrer && strpos( $referrer, 'wp-login.php' ) !== false && strpos( $referrer, 'redirect_to' ) !== false ) {
+        return;
+    }
+
+    $login_page  = home_url( '/login/' );
+    wp_redirect( $login_page . '?login=failed' );
+    exit;
+}
+
+// 3. Handle jika form kosong saat disubmit
+add_action( 'authenticate', 'verify_username_password', 1, 3);
+function verify_username_password( $user, $username, $password ) {
+    $login_page  = home_url( '/login/' );
+    
+    // Jangan redirect jika kosong di halaman login WP bawaan
+    $referrer = wp_get_referer();
+    if ( $referrer && strpos( $referrer, 'wp-login.php' ) !== false ) {
+        return $user;
+    }
+
+    if ( $username == "" || $password == "" ) {
+        wp_redirect( $login_page . '?login=failed' );
+        exit;
+    }
+    
+    return $user;
+}

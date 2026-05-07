@@ -6,7 +6,6 @@
 
 get_header(); ?>
 
-<!-- Memanggil Assets Swiper.js -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
@@ -82,7 +81,6 @@ get_header(); ?>
 
 <main id="primary" class="site-main" style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
 
-    <!-- 1. HERO SECTION -->
     <section class="hero-section" style="position: relative;">
         <div class="swiper hero-swiper">
             <div class="swiper-wrapper">
@@ -112,13 +110,15 @@ get_header(); ?>
             <div class="swiper-pagination" style="bottom: 30px; z-index: 10;"></div>
         </div>
         
-        <!-- Tombol Join -->
         <div class="join-button-wrapper" style="position: absolute; right: 8%; bottom: -25px; z-index: 99;">
-            <a href="#" class="btn-join" style="display: inline-block; background-color: #D74690; color: #ffffff; padding: 18px 40px; text-decoration: none; font-weight: bold; font-size: 16px; border-radius: 4px; box-shadow: 0 4px 15px rgba(215,70,144,0.4);">JOIN NOW</a>
+            <?php if ( is_user_logged_in() ) : ?>
+                <a href="#" class="btn-join" style="display: inline-block; background-color: #D74690; color: #ffffff; padding: 18px 40px; text-decoration: none; font-weight: bold; font-size: 16px; border-radius: 4px; box-shadow: 0 4px 15px rgba(215,70,144,0.4);">MEMBER AREA</a>
+            <?php else : ?>
+                <a href="<?php echo esc_url( home_url( '/login/' ) ); ?>" class="btn-join" style="display: inline-block; background-color: #D74690; color: #ffffff; padding: 18px 40px; text-decoration: none; font-weight: bold; font-size: 16px; border-radius: 4px; box-shadow: 0 4px 15px rgba(215,70,144,0.4);">JOIN NOW</a>
+            <?php endif; ?>
         </div>
     </section>
 
-    <!-- 2. INFO TERBARU SECTION -->
     <section class="info-terbaru-section" style="padding: 100px 0 40px;">
         <div class="container" style="max-width: 1350px; margin: 0 auto; padding: 0 20px;">
             
@@ -147,14 +147,11 @@ get_header(); ?>
         </div>
     </section>
 
-    <!-- 3. EVENT SECTION -->
     <section class="event-section" style="padding: 40px 0 60px;">
         <div class="container" style="max-width: 1350px; margin: 0 auto; padding: 0 20px;">
             
-            <!-- Menggunakan Flexbox agar tombol "Event Lainnya" sejajar ke kanan -->
             <div class="section-header" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px;">
                 <h2 style="color: #D74690; margin: 0; font-size: 24px; font-weight: 600;">Event dan Pelatihan</h2>
-                <!-- Link di bawah ini sudah diarahkan ke halaman yang baru saja Anda buat -->
                 <a href="https://ikapsiundip.or.id/daftar-event/" style="color: #D74690; font-size: 15px; font-weight: 600; text-decoration: none;">Event Lainnya >></a>
             </div>
 
@@ -192,7 +189,6 @@ get_header(); ?>
         </div>
     </section>
 
-    <!-- 4. GALERI SECTION -->
     <section class="galeri-section" style="padding: 20px 0 60px;">
         <div class="container" style="max-width: 1350px; margin: 0 auto; padding: 0 20px;">
             <h2 style="color: #D74690; margin-bottom: 40px; font-size: 24px; font-weight: 600;">Galeri Foto/Video</h2>
@@ -202,7 +198,6 @@ get_header(); ?>
         </div>
     </section>
 
-    <!-- 5. PROFIL SECTION -->
     <section class="profil-section" style="background-color: #0b1c4c; color: #ffffff; padding: 80px 0;">
         <div class="container" style="max-width: 1350px; margin: 0 auto; padding: 0 20px;">
             <div class="row" style="display: flex; gap: 60px; align-items: center; flex-wrap: wrap;">
@@ -246,7 +241,6 @@ get_header(); ?>
         </div>
     </section>
 
-    <!-- 6. KONTAK SECTION -->
     <section class="hubungi-section" style="padding: 80px 0; background-color: #f0f2f5;">
         <div class="container" style="max-width: 1350px; margin: 0 auto; padding: 0 20px;">
             <h2 style="color: #D74690; margin-bottom: 40px; font-size: 24px; font-weight: 600;">Hubungi IKAPSI UNDIP</h2>

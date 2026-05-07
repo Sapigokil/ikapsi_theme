@@ -61,22 +61,12 @@
             font-weight: 600;
         }
 
-        /* Bagian Kanan: Aksi (Masuk & Gabung) */
+        /* Bagian Kanan: Aksi (Satu Tombol Sentral) */
         .header-actions {
             display: flex;
             align-items: center;
-            gap: 20px;
         }
-        .btn-masuk {
-            color: #555555;
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 14px;
-            transition: color 0.3s ease;
-        }
-        .btn-masuk:hover {
-            color: #D74690;
-        }
+        
         .btn-gabung {
             background-color: #D74690;
             color: #ffffff;
@@ -87,9 +77,63 @@
             font-size: 14px;
             transition: background-color 0.3s ease;
             white-space: nowrap;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+            display: inline-block;
         }
         .btn-gabung:hover {
             background-color: #bf3a7d;
+        }
+
+        /* Styling Dropdown Member */
+        .dropdown-member-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .dropdown-member-menu {
+            position: absolute;
+            right: 0;
+            top: calc(100% + 15px);
+            background: #ffffff;
+            border: 1px solid #eaeaea;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            width: 180px;
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            z-index: 1005;
+            overflow: hidden;
+        }
+        
+        .dropdown-member-menu.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .dropdown-member-menu a {
+            padding: 12px 20px;
+            color: #555555;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            border-bottom: 1px solid #f5f5f5;
+            transition: background 0.2s, color 0.2s;
+        }
+        
+        .dropdown-member-menu a:last-child {
+            border-bottom: none;
+        }
+        
+        .dropdown-member-menu a:hover {
+            background-color: #FFF0F6; /* Soft pink hover */
+            color: #D74690;
         }
 
         /* Tombol Hamburger (Disembunyikan di Desktop) */
@@ -117,7 +161,7 @@
         /* Responsif untuk Mobile */
         @media (max-width: 992px) {
             .menu-toggle {
-                display: flex; /* Munculkan hamburger di layar kecil */
+                display: flex; 
             }
 
             .mobile-menu-wrapper {
@@ -133,7 +177,6 @@
                 border-bottom: 1px solid #eaeaea;
                 box-shadow: 0 10px 15px rgba(0,0,0,0.05);
                 
-                /* Efek animasi dropdown */
                 visibility: hidden;
                 opacity: 0;
                 transform: translateY(-10px);
@@ -164,15 +207,33 @@
 
             .header-actions {
                 width: 100%;
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 15px;
+            }
+            
+            /* Penyesuaian Dropdown di HP agar statis dan memanjang */
+            .dropdown-member-wrapper {
+                width: 100%;
             }
             
             .btn-gabung {
-                text-align: center;
                 width: 100%;
+                text-align: center;
                 box-sizing: border-box;
+            }
+
+            .dropdown-member-menu {
+                position: static;
+                width: 100%;
+                box-shadow: none;
+                border: 1px solid #eaeaea;
+                margin-top: 10px;
+                display: none; /* Sembunyikan elemen fisik sebelum dipanggil agar tidak makan ruang */
+                transform: none;
+                opacity: 1;
+                visibility: visible;
+            }
+            
+            .dropdown-member-menu.show {
+                display: flex;
             }
 
             /* Animasi Icon Hamburger menjadi tanda silang (X) */
@@ -195,23 +256,19 @@
 <header id="masthead-internal" class="header-internal">
     <div class="header-internal-container">
         
-        <!-- Bagian Kiri: Logo -->
         <div class="site-branding-internal">
             <a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home" style="display: inline-block;">
                 <img src="<?php echo esc_url( get_template_directory_uri() . '/images/logo-1.png' ); ?>" alt="Logo IKAPSI UNDIP">
             </a>
         </div>
 
-        <!-- Tombol Hamburger untuk Mobile -->
         <button class="menu-toggle" aria-label="Buka Menu" aria-expanded="false">
             <span></span>
             <span></span>
             <span></span>
         </button>
 
-        <!-- Wrapper Menu & Aksi (Akan menjadi Dropdown di Mobile) -->
         <div class="mobile-menu-wrapper">
-            <!-- Bagian Tengah: Menu Navigasi -->
             <nav id="site-navigation-internal" class="main-navigation-internal">
                 <?php
                 if ( has_nav_menu( 'primary' ) ) {
@@ -227,30 +284,60 @@
                 ?>
             </nav>
 
-            <!-- Bagian Kanan: Tombol Aksi -->
             <div class="header-actions">
-                <a href="#" class="btn-masuk">Masuk</a>
-                <a href="#" class="btn-gabung">Gabung Alumni</a>
+                <?php if ( is_user_logged_in() ) : ?>
+                    
+                    <div class="dropdown-member-wrapper">
+                        <button class="btn-gabung member-dropdown-toggle">Member ▼</button>
+                        <div class="dropdown-member-menu">
+                            <a href="<?php echo esc_url( home_url( '/user/' ) ); ?>">Member Area</a>
+                            <a href="<?php echo esc_url( wp_logout_url( home_url() ) ); ?>">Logout</a>
+                        </div>
+                    </div>
+                    
+                <?php else : ?>
+                    
+                    <a href="<?php echo esc_url( home_url( '/login/' ) ); ?>" class="btn-gabung">Login</a>
+                    
+                <?php endif; ?>
             </div>
         </div>
 
     </div>
 </header>
 
-<!-- Script Hamburger Menu -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Logika untuk Mobile Hamburger Menu
         const menuToggle = document.querySelector('.menu-toggle');
         const mobileMenu = document.querySelector('.mobile-menu-wrapper');
 
         if(menuToggle && mobileMenu) {
-            menuToggle.addEventListener('click', function() {
+            menuToggle.addEventListener('click', function(e) {
+                e.stopPropagation();
                 menuToggle.classList.toggle('active');
                 mobileMenu.classList.toggle('active');
                 
-                // Update ARIA attribute untuk aksesibilitas
                 const isExpanded = menuToggle.classList.contains('active');
                 menuToggle.setAttribute('aria-expanded', isExpanded);
+            });
+        }
+
+        // Logika untuk Dropdown Member
+        const memberToggle = document.querySelector('.member-dropdown-toggle');
+        const memberMenu = document.querySelector('.dropdown-member-menu');
+
+        if(memberToggle && memberMenu) {
+            memberToggle.addEventListener('click', function(e) {
+                e.stopPropagation();
+                memberMenu.classList.toggle('show');
+            });
+
+            // Otomatis menutup dropdown jika user mengklik area lain di layar
+            document.addEventListener('click', function(e) {
+                if(!memberMenu.contains(e.target) && e.target !== memberToggle) {
+                    memberMenu.classList.remove('show');
+                }
             });
         }
     });
