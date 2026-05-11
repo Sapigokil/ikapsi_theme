@@ -112,9 +112,15 @@ get_header(); ?>
         
         <div class="join-button-wrapper" style="position: absolute; right: 8%; bottom: -25px; z-index: 99;">
             <?php if ( is_user_logged_in() ) : ?>
-                <a href="#" class="btn-join" style="display: inline-block; background-color: #D74690; color: #ffffff; padding: 18px 40px; text-decoration: none; font-weight: bold; font-size: 16px; border-radius: 4px; box-shadow: 0 4px 15px rgba(215,70,144,0.4);">MEMBER AREA</a>
+                <a href="<?php echo esc_url( home_url( '/?go_to_member=1' ) ); ?>" class="btn-join" style="display: inline-block; background-color: #D74690; color: #ffffff; padding: 18px 40px; text-decoration: none; font-weight: bold; font-size: 16px; border-radius: 4px; box-shadow: 0 4px 15px rgba(215,70,144,0.4);">MEMBER AREA</a>
             <?php else : ?>
-                <a href="<?php echo esc_url( home_url( '/login/' ) ); ?>" class="btn-join" style="display: inline-block; background-color: #D74690; color: #ffffff; padding: 18px 40px; text-decoration: none; font-weight: bold; font-size: 16px; border-radius: 4px; box-shadow: 0 4px 15px rgba(215,70,144,0.4);">JOIN NOW</a>
+                <?php 
+                // Menambahkan parameter redirect agar setelah login langsung dilempar ke SSO Laravel
+                $login_url = home_url( '/login/' );
+                $redirect_url = urlencode( home_url( '/?go_to_member=1' ) );
+                $final_login_url = add_query_arg( 'redirect_to', $redirect_url, $login_url );
+                ?>
+                <a href="<?php echo esc_url( $final_login_url ); ?>" class="btn-join" style="display: inline-block; background-color: #D74690; color: #ffffff; padding: 18px 40px; text-decoration: none; font-weight: bold; font-size: 16px; border-radius: 4px; box-shadow: 0 4px 15px rgba(215,70,144,0.4);">JOIN NOW</a>
             <?php endif; ?>
         </div>
     </section>

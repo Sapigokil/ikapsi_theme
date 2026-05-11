@@ -206,14 +206,13 @@ function filter_artikel_ajax() {
     $search   = isset($_POST['search']) ? sanitize_text_field($_POST['search']) : '';
 
     $args = array(
-        'post_type'      => 'post', // Mengambil post standar bawaan WP
-        'posts_per_page' => -1,     // Menampilkan semua (bisa diubah angkanya jika ingin dibatasi)
+        'post_type'      => 'post', 
+        'posts_per_page' => -1,    
         'post_status'    => 'publish'
     );
 
-    // Filter Kategori Bawaan WP
     if ($category !== 'all') {
-        $args['category_name'] = $category; // Menggunakan slug kategori
+        $args['category_name'] = $category; 
     }
 
     if (!empty($search)) {
@@ -266,22 +265,18 @@ function redirect_login_page() {
 
     if ( $page_viewed == "wp-login.php" && $_SERVER['REQUEST_METHOD'] == 'GET' ) {
         
-        // Pengecualian 1: Jika admin mengakses wp-admin secara langsung (otomatis ada parameter redirect_to=wp-admin)
         if ( isset($_GET['redirect_to']) && strpos($_GET['redirect_to'], 'wp-admin') !== false ) {
-            return; // Hentikan fungsi, biarkan halaman login WP terbuka
+            return; 
         }
 
-        // Pengecualian 2: Akses rahasia manual (wp-login.php?admin_bypass=true)
         if ( isset($_GET['admin_bypass']) && $_GET['admin_bypass'] == 'true' ) {
-            return; // Hentikan fungsi, biarkan halaman login WP terbuka
+            return; 
         }
 
-        // Pengecualian 3: Jangan redirect jika sedang melakukan reset password atau logout
         if ( isset($_GET['action']) && in_array($_GET['action'], array('logout', 'lostpassword', 'rp', 'resetpass')) ) {
             return;
         }
 
-        // Jika bukan admin, lempar ke halaman login custom
         wp_redirect($login_page);
         exit;
     }
@@ -290,7 +285,6 @@ function redirect_login_page() {
 // 2. Handle jika login gagal agar tetap di halaman custom (bukan dilempar ke wp-login.php)
 add_action( 'wp_login_failed', 'login_failed_redirect' );
 function login_failed_redirect( $username ) {
-    // Jika yang gagal login mencoba masuk lewat wp-admin, biarkan di wp-login.php
     $referrer = wp_get_referer();
     if ( $referrer && strpos( $referrer, 'wp-login.php' ) !== false && strpos( $referrer, 'redirect_to' ) !== false ) {
         return;
@@ -306,7 +300,6 @@ add_action( 'authenticate', 'verify_username_password', 1, 3);
 function verify_username_password( $user, $username, $password ) {
     $login_page  = home_url( '/login/' );
     
-    // Jangan redirect jika kosong di halaman login WP bawaan
     $referrer = wp_get_referer();
     if ( $referrer && strpos( $referrer, 'wp-login.php' ) !== false ) {
         return $user;
@@ -318,4 +311,49 @@ function verify_username_password( $user, $username, $password ) {
     }
     
     return $user;
+}
+
+// ==============================================================================
+// IKAPSI SSO TRIGGER KE LARAVEL & SHORTCODE BUTTON
+// ==============================================================================
+
+// A. Logika Redirect SSO
+add_action('init', 'ikapsi_sso_to_laravel');
+function ikapsi_sso_to_laravel() {
+    if (isset($_GET['go_to_member']) && is_user_logged_in()) {
+        
+        $current_user = wp_get_current_user();
+        $token = bin2hex(random_bytes(32));
+        
+        update_user_meta($current_user->ID, 'sso_laravel_token', $token);
+        update_user_meta($current_user->ID, 'sso_laravel_expiry', time() + 60);
+        
+        $laravel_url = defined('LARAVEL_SSO_URL') ? LARAVEL_SSO_URL : 'https://member.ikapsi.com/sso-login';
+        
+        $redirect_url = add_query_arg([
+            'uid'   => $current_user->ID,
+            'email' => urlencode($current_user->user_email),
+            'name'  => urlencode($current_user->display_name),
+            'token' => $token
+        ], $laravel_url);
+        
+        wp_redirect($redirect_url);
+        exit;
+    }
+}
+
+// B. Shortcode [tombol_member]
+add_shortcode('tombol_member', 'ikapsi_sso_button_shortcode');
+function ikapsi_sso_button_shortcode($atts) {
+    // Tautan trigger SSO
+    $link = home_url('/?go_to_member=1');
+    $label = is_user_logged_in() ? 'Masuk Member Area' : 'Login Alumni';
+    
+    // Jika belum login di WP, arahkan ke login WP dulu baru lempar ke SSO
+    if (!is_user_logged_in()) {
+        $link = wp_login_url(home_url('/?go_to_member=1'));
+    }
+
+    // Output Tombol (Gaya inline agar tidak berantakan jika CSS belum dimuat)
+    return '<a href="' . esc_url($link) . '" class="btn-member-area" style="background-color: #D74690; color: #ffffff !important; padding: 12px 25px; border-radius: 8px; font-weight: bold; text-decoration: none; display: inline-block; border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">' . esc_html($label) . '</a>';
 }

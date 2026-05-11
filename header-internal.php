@@ -290,14 +290,20 @@
                     <div class="dropdown-member-wrapper">
                         <button class="btn-gabung member-dropdown-toggle">Member ▼</button>
                         <div class="dropdown-member-menu">
-                            <a href="<?php echo esc_url( home_url( '/user/' ) ); ?>">Member Area</a>
+                            <a href="<?php echo esc_url( home_url( '/?go_to_member=1' ) ); ?>">Member Area</a>
                             <a href="<?php echo esc_url( wp_logout_url( home_url() ) ); ?>">Logout</a>
                         </div>
                     </div>
                     
                 <?php else : ?>
                     
-                    <a href="<?php echo esc_url( home_url( '/login/' ) ); ?>" class="btn-gabung">Login</a>
+                    <?php 
+                    // Menambahkan parameter redirect agar setelah login langsung dilempar ke SSO Laravel
+                    $login_url = home_url( '/login/' );
+                    $redirect_url = urlencode( home_url( '/?go_to_member=1' ) );
+                    $final_login_url = add_query_arg( 'redirect_to', $redirect_url, $login_url );
+                    ?>
+                    <a href="<?php echo esc_url( $final_login_url ); ?>" class="btn-gabung">Login</a>
                     
                 <?php endif; ?>
             </div>
