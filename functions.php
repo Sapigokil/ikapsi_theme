@@ -254,7 +254,7 @@ add_action('wp_ajax_filter_artikel', 'filter_artikel_ajax');
 add_action('wp_ajax_nopriv_filter_artikel', 'filter_artikel_ajax');
 
 /**
- * Logika Keamanan Halaman Login Custom
+ * Logika Keamanan Halaman Login Custom & Redirect
  */
 
 // 1. Alihkan wp-login.php ke halaman login buatan kita (Dengan Pengecualian Admin)
@@ -313,6 +313,29 @@ function verify_username_password( $user, $username, $password ) {
     return $user;
 }
 
+// 4. Arahkan ke Beranda setelah login berhasil (kecuali Admin & SSO)
+add_filter( 'login_redirect', 'ikapsi_after_login_redirect', 999, 3 );
+function ikapsi_after_login_redirect( $redirect_to, $request, $user ) {
+    // Memastikan objek user valid
+    if ( ! is_a( $user, 'WP_User' ) ) {
+        return $redirect_to;
+    }
+
+    // Jangan merubah alur jika user datang dari tombol "JOIN NOW" (yang memiliki trigger SSO)
+    if ( ! empty( $request ) && strpos( $request, 'go_to_member' ) !== false ) {
+        return $request;
+    }
+
+    // Administrator tetap diarahkan ke dashboard WP (wp-admin)
+    if ( in_array( 'administrator', (array) $user->roles ) ) {
+        return admin_url();
+    }
+
+    // Selain kondisi di atas, paksa alumni untuk diarahkan kembali ke Beranda (Homepage)
+    return home_url( '/' );
+}
+
+
 // ==============================================================================
 // IKAPSI SSO TRIGGER KE LARAVEL & SHORTCODE BUTTON
 // ==============================================================================
@@ -328,7 +351,7 @@ function ikapsi_sso_to_laravel() {
         update_user_meta($current_user->ID, 'sso_laravel_token', $token);
         update_user_meta($current_user->ID, 'sso_laravel_expiry', time() + 60);
         
-        $laravel_url = defined('LARAVEL_SSO_URL') ? LARAVEL_SSO_URL : 'https://member.ikapsi.com/sso-login';
+        $laravel_url = defined('LARAVEL_SSO_URL') ? LARAVEL_SSO_URL : 'https://member.ikapsiundip.or.id/sso-login';
         
         $redirect_url = add_query_arg([
             'uid'   => $current_user->ID,
@@ -354,6 +377,6 @@ function ikapsi_sso_button_shortcode($atts) {
         $link = wp_login_url(home_url('/?go_to_member=1'));
     }
 
-    // Output Tombol (Gaya inline agar tidak berantakan jika CSS belum dimuat)
+    // Output Tombol
     return '<a href="' . esc_url($link) . '" class="btn-member-area" style="background-color: #D74690; color: #ffffff !important; padding: 12px 25px; border-radius: 8px; font-weight: bold; text-decoration: none; display: inline-block; border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">' . esc_html($label) . '</a>';
 }
