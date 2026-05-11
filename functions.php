@@ -313,25 +313,19 @@ function verify_username_password( $user, $username, $password ) {
     return $user;
 }
 
-// 4. Arahkan ke Beranda setelah login berhasil (kecuali Admin & SSO)
+// 4. Arahkan ke Beranda setelah login berhasil (Semua User termasuk Admin)
 add_filter( 'login_redirect', 'ikapsi_after_login_redirect', 999, 3 );
 function ikapsi_after_login_redirect( $redirect_to, $request, $user ) {
-    // Memastikan objek user valid
     if ( ! is_a( $user, 'WP_User' ) ) {
         return $redirect_to;
     }
 
-    // Jangan merubah alur jika user datang dari tombol "JOIN NOW" (yang memiliki trigger SSO)
+    // Jangan merubah alur jika user datang dari pemicu SSO Laravel
     if ( ! empty( $request ) && strpos( $request, 'go_to_member' ) !== false ) {
         return $request;
     }
 
-    // Administrator tetap diarahkan ke dashboard WP (wp-admin)
-    if ( in_array( 'administrator', (array) $user->roles ) ) {
-        return admin_url();
-    }
-
-    // Selain kondisi di atas, paksa alumni untuk diarahkan kembali ke Beranda (Homepage)
+    // Paksa seluruh pengguna (termasuk Admin) untuk diarahkan ke Beranda
     return home_url( '/' );
 }
 
@@ -368,15 +362,12 @@ function ikapsi_sso_to_laravel() {
 // B. Shortcode [tombol_member]
 add_shortcode('tombol_member', 'ikapsi_sso_button_shortcode');
 function ikapsi_sso_button_shortcode($atts) {
-    // Tautan trigger SSO
     $link = home_url('/?go_to_member=1');
     $label = is_user_logged_in() ? 'Masuk Member Area' : 'Login Alumni';
     
-    // Jika belum login di WP, arahkan ke login WP dulu baru lempar ke SSO
     if (!is_user_logged_in()) {
         $link = wp_login_url(home_url('/?go_to_member=1'));
     }
 
-    // Output Tombol
     return '<a href="' . esc_url($link) . '" class="btn-member-area" style="background-color: #D74690; color: #ffffff !important; padding: 12px 25px; border-radius: 8px; font-weight: bold; text-decoration: none; display: inline-block; border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">' . esc_html($label) . '</a>';
 }
