@@ -5,13 +5,8 @@
 
 if ( ! function_exists( 'ikapsi_undip_setup' ) ) {
     function ikapsi_undip_setup() {
-        // Menambahkan dukungan tag title otomatis dari WordPress ke bagian <head>
         add_theme_support( 'title-tag' );
-
-        // Menambahkan dukungan gambar fitur (Featured Image / Thumbnail) pada post dan page
         add_theme_support( 'post-thumbnails' );
-
-        // Mendaftarkan lokasi menu navigasi dasar
         register_nav_menus( array(
             'primary' => __( 'Primary Menu', 'ikapsi-undip' ),
         ) );
@@ -19,11 +14,7 @@ if ( ! function_exists( 'ikapsi_undip_setup' ) ) {
 }
 add_action( 'after_setup_theme', 'ikapsi_undip_setup' );
 
-/**
- * Memuat (Enqueue) file CSS utama tema.
- */
 function ikapsi_undip_scripts() {
-    // Memanggil file style.css
     wp_enqueue_style( 'ikapsi-undip-style', get_stylesheet_uri(), array(), wp_get_theme()->get('Version') );
 }
 add_action( 'wp_enqueue_scripts', 'ikapsi_undip_scripts' );
@@ -115,18 +106,15 @@ function filter_projects_ajax() {
     if ($query->have_posts()) :
         while ($query->have_posts()) : $query->the_post();
             
-            // Ambil Data ACF
             $lokasi       = get_field('lokasi');
             $nama_alumni  = get_field('nama_alumni');
             $angkatan     = get_field('angkatan');
             $foto_alumni  = get_field('foto_alumni');
             $link_project = get_field('link_project');
             
-            // Ambil Kategori Pertama untuk Badge
             $terms = get_the_terms(get_the_ID(), 'project_category');
             $badge = $terms && !is_wp_error($terms) ? $terms[0]->name : 'Uncategorized';
             
-            // Logika Fallback
             $foto_src = $foto_alumni ? esc_url($foto_alumni) : esc_url(get_template_directory_uri() . '/images/default-avatar.png');
             $link_url = $link_project ? esc_url($link_project) : get_the_permalink();
             ?>
@@ -320,12 +308,10 @@ function ikapsi_after_login_redirect( $redirect_to, $request, $user ) {
         return $redirect_to;
     }
 
-    // Jangan merubah alur jika user datang dari pemicu SSO Laravel
     if ( ! empty( $request ) && strpos( $request, 'go_to_member' ) !== false ) {
         return $request;
     }
 
-    // Paksa seluruh pengguna (termasuk Admin) untuk diarahkan ke Beranda
     return home_url( '/' );
 }
 
@@ -345,7 +331,7 @@ function ikapsi_sso_to_laravel() {
         update_user_meta($current_user->ID, 'sso_laravel_token', $token);
         update_user_meta($current_user->ID, 'sso_laravel_expiry', time() + 60);
         
-        $laravel_url = defined('LARAVEL_SSO_URL') ? LARAVEL_SSO_URL : 'https://member.ikapsiundip.or.id/sso-login';
+        $laravel_url = defined('LARAVEL_SSO_URL') ? LARAVEL_SSO_URL : 'http://localhost:8000/sso-login';
         
         $redirect_url = add_query_arg([
             'uid'   => $current_user->ID,
@@ -370,4 +356,31 @@ function ikapsi_sso_button_shortcode($atts) {
     }
 
     return '<a href="' . esc_url($link) . '" class="btn-member-area" style="background-color: #D74690; color: #ffffff !important; padding: 12px 25px; border-radius: 8px; font-weight: bold; text-decoration: none; display: inline-block; border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">' . esc_html($label) . '</a>';
+}
+
+// C. Logika Single Log Out (SLO) dari Laravel ke WordPress
+add_action('init', 'ikapsi_sso_logout_handler');
+function ikapsi_sso_logout_handler() {
+    if (isset($_GET['sso_action']) && $_GET['sso_action'] === 'logout') {
+        
+        // Nonaktifkan Hook WP->Laravel agar tidak terjadi "Infinite Loop"
+        remove_action('wp_logout', 'ikapsi_sso_logout_to_laravel');
+        
+        wp_logout();
+        
+        wp_redirect(home_url('/'));
+        exit;
+    }
+}
+
+// D. Logika Single Log Out (SLO) dari WordPress ke Laravel
+add_action('wp_logout', 'ikapsi_sso_logout_to_laravel');
+function ikapsi_sso_logout_to_laravel() {
+    
+    // Arahkan ke rute penghancur sesi di Laravel
+    // Jika Anda online, pastikan Anda mendefinisikan LARAVEL_SLO_URL di wp-config.php
+    $laravel_slo_url = defined('LARAVEL_SLO_URL') ? LARAVEL_SLO_URL : 'http://localhost:8000/sso-logout';
+    
+    wp_redirect($laravel_slo_url);
+    exit;
 }
