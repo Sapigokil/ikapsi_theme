@@ -331,7 +331,7 @@ function ikapsi_sso_to_laravel() {
         update_user_meta($current_user->ID, 'sso_laravel_token', $token);
         update_user_meta($current_user->ID, 'sso_laravel_expiry', time() + 60);
         
-        $laravel_url = defined('LARAVEL_SSO_URL') ? LARAVEL_SSO_URL : 'http://localhost:8000/sso-login';
+        $laravel_url = defined('LARAVEL_SSO_URL') ? LARAVEL_SSO_URL : home_url('/sso-login');
         
         $redirect_url = add_query_arg([
             'uid'   => $current_user->ID,
@@ -377,9 +377,9 @@ function ikapsi_sso_logout_handler() {
 add_action('wp_logout', 'ikapsi_sso_logout_to_laravel');
 function ikapsi_sso_logout_to_laravel() {
     
-    // Arahkan ke rute penghancur sesi di Laravel
-    // Jika Anda online, pastikan Anda mendefinisikan LARAVEL_SLO_URL di wp-config.php
-    $laravel_slo_url = defined('LARAVEL_SLO_URL') ? LARAVEL_SLO_URL : 'http://localhost:8000/sso-logout';
+    // PERBAIKAN: Fallback URL diubah menggunakan home_url() secara paksa
+    // Ini menjamin link logout tidak akan nyasar ke localhost:8000 lagi
+    $laravel_slo_url = defined('LARAVEL_SLO_URL') ? LARAVEL_SLO_URL : home_url('/sso-logout');
     
     wp_redirect($laravel_slo_url);
     exit;
