@@ -130,7 +130,7 @@ get_header(); ?>
             
             <div class="section-header" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px;">
                 <h2 style="color: #D74690; margin: 0; font-size: 24px; font-weight: 600;">Info Terbaru</h2>
-                <a href="<?php echo get_permalink( get_option( 'page_for_posts' ) ); ?>" style="color: #D74690; font-size: 15px; font-weight: 600; text-decoration: none;">Info Lainnya >></a>
+                <a href="<?php echo esc_url(home_url('/artikel/')); ?>" style="color: #D74690; font-size: 15px; font-weight: 600; text-decoration: none;">Info Lainnya >></a>
             </div>
 
             <div class="row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
@@ -158,7 +158,7 @@ get_header(); ?>
             
             <div class="section-header" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px;">
                 <h2 style="color: #D74690; margin: 0; font-size: 24px; font-weight: 600;">Event dan Pelatihan</h2>
-                <a href="https://ikapsiundip.or.id/daftar-event/" style="color: #D74690; font-size: 15px; font-weight: 600; text-decoration: none;">Event Lainnya >></a>
+                <a href="<?php echo esc_url(home_url('/daftar-event/')); ?>" style="color: #D74690; font-size: 15px; font-weight: 600; text-decoration: none;">Event Lainnya >></a>
             </div>
 
             <div class="row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
