@@ -23,15 +23,13 @@ if ( isset( $_POST['submit_register'] ) && isset( $_POST['register_nonce'] ) ) {
         $username     = sanitize_user( $_POST['username'] );
         $email        = sanitize_email( $_POST['email'] );
         $full_name    = sanitize_text_field( $_POST['full_name'] );
-        $fakultas     = sanitize_text_field( $_POST['fakultas'] );
-        $tahun_lulus  = sanitize_text_field( $_POST['tahun_lulus'] );
         $phone_number = sanitize_text_field( $_POST['phone_number'] );
-        $alamat       = sanitize_textarea_field( $_POST['alamat'] );
+        $angkatan     = sanitize_text_field( $_POST['angkatan'] );
         $password     = $_POST['password'];
         $password_cek = $_POST['password_confirm'];
 
         // Validasi kolom wajib
-        if ( empty( $username ) || empty( $email ) || empty( $full_name ) || empty( $password ) || empty( $tahun_lulus ) || empty( $phone_number ) || empty( $alamat ) ) {
+        if ( empty( $username ) || empty( $email ) || empty( $full_name ) || empty( $password ) || empty( $angkatan ) || empty( $phone_number ) ) {
             $errors[] = 'Mohon lengkapi semua kolom yang wajib diisi.';
         }
         
@@ -59,10 +57,8 @@ if ( isset( $_POST['submit_register'] ) && isset( $_POST['register_nonce'] ) ) {
 
             if ( ! is_wp_error( $user_id ) ) {
                 // Menyimpan data tambahan (User Meta)
-                update_user_meta( $user_id, 'fakultas', $fakultas );
-                update_user_meta( $user_id, 'tahun_lulus', $tahun_lulus );
                 update_user_meta( $user_id, 'phone_number', $phone_number );
-                update_user_meta( $user_id, 'alamat', $alamat );
+                update_user_meta( $user_id, 'angkatan', $angkatan );
                 
                 // Set status akun menjadi Pending untuk Ultimate Member
                 update_user_meta( $user_id, 'account_status', 'awaiting_admin_review' );
@@ -268,18 +264,8 @@ get_header('internal'); ?>
                         </div>
 
                         <div class="input-group">
-                            <label for="tahun_lulus">Tahun Lulus *</label>
-                            <input type="number" id="tahun_lulus" name="tahun_lulus" min="1950" max="<?php echo date('Y'); ?>" value="<?php echo isset($_POST['tahun_lulus']) ? esc_attr($_POST['tahun_lulus']) : ''; ?>" required>
-                        </div>
-
-                        <div class="input-group full-width-col">
-                            <label for="fakultas">Fakultas *</label>
-                            <input type="text" id="fakultas" name="fakultas" value="<?php echo isset($_POST['fakultas']) ? esc_attr($_POST['fakultas']) : 'Psikologi'; ?>" required>
-                        </div>
-
-                        <div class="input-group full-width-col">
-                            <label for="alamat">Alamat Lengkap *</label>
-                            <textarea id="alamat" name="alamat" rows="3" required><?php echo isset($_POST['alamat']) ? esc_textarea($_POST['alamat']) : ''; ?></textarea>
+                            <label for="angkatan">Angkatan *</label>
+                            <input type="number" id="angkatan" name="angkatan" min="1950" max="<?php echo date('Y'); ?>" value="<?php echo isset($_POST['angkatan']) ? esc_attr($_POST['angkatan']) : ''; ?>" placeholder="Contoh: 2020" required>
                         </div>
 
                         <div class="input-group">
