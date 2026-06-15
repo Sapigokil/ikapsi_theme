@@ -384,3 +384,43 @@ function ikapsi_sso_logout_to_laravel() {
     wp_redirect($laravel_slo_url);
     exit;
 }
+
+/**
+ * =========================================================================
+ * REGISTRASI CUSTOM ROLE IKAPSI
+ * =========================================================================
+ * Menambahkan role Moderator dan Member agar sinkron dengan sistem Laravel.
+ * Role Administrator dan Subscriber tidak ditambahkan karena sudah bawaan WP.
+ */
+function ikapsi_register_custom_roles() {
+    
+    // 1. Menambahkan Role 'Moderator'
+    // Memiliki akses untuk membaca, mengedit konten user lain, dan publish (bisa disesuaikan nanti)
+    add_role(
+        'moderator',
+        'Moderator',
+        array(
+            'read'                   => true,
+            'edit_posts'             => true,
+            'edit_others_posts'      => true,
+            'edit_published_posts'   => true,
+            'publish_posts'          => true,
+            'upload_files'           => true,
+        )
+    );
+
+    // 2. Menambahkan Role 'Member'
+    // Alumni yang sudah full terverifikasi. Bisa submit draft konten artikel/galeri.
+    add_role(
+        'member',
+        'Member',
+        array(
+            'read'         => true,
+            'edit_posts'   => true, // Diperlukan agar member bisa submit draft artikel via WP
+            'upload_files' => true, // Diperlukan agar member bisa submit gambar galeri
+        )
+    );
+    
+}
+// Hook ke init agar role dieksekusi saat WordPress dimuat
+add_action( 'init', 'ikapsi_register_custom_roles' );
