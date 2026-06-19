@@ -209,9 +209,9 @@ get_header('internal'); ?>
 
                     <h1 class="project-title"><?php the_title(); ?></h1>
                     
-                    <div class="project-meta">
+                    <!-- <div class="project-meta">
                         Dipublikasikan pada: <?php echo get_the_date('d F Y'); ?>
-                    </div>
+                    </div> -->
 
                     <div class="project-content">
                         <?php 
