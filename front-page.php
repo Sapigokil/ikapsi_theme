@@ -88,12 +88,22 @@ get_header(); ?>
                 $has_slides = false;
                 for ($i = 1; $i <= 5; $i++) {
                     $img_url = get_field('hero_' . $i);
+                    $link_url = get_field('url_hero' . $i); // Mengambil data link dari ACF
+                    
                     if ($img_url) : 
                         $has_slides = true;
                 ?>
                     <div class="swiper-slide">
+                        <?php if ($link_url) : ?>
+                            <a href="<?php echo esc_url($link_url); ?>" style="display: block; width: 100%; height: 100%; position: relative;">
+                        <?php endif; ?>
+                        
                         <img src="<?php echo esc_url($img_url); ?>" alt="Banner Hero IKAPSI UNDIP" class="hero-img-element">
                         <div class="slide-overlay"></div>
+                        
+                        <?php if ($link_url) : ?>
+                            </a>
+                        <?php endif; ?>
                     </div>
                 <?php 
                     endif;
