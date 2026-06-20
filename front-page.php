@@ -11,18 +11,28 @@ get_header(); ?>
 
 <style>
     /* ==========================================================================
-       HERO SLIDER STYLING (Responsive Aspect Ratio)
+       HERO SLIDER STYLING (Max Height < 565px Lock)
        ========================================================================== */
-    .hero-swiper { width: 100%; position: relative; }
-    .swiper-slide { position: relative; display: block; }
+    .hero-swiper { 
+        width: 100%; 
+        position: relative; 
+        max-height: 550px; /* KUNCI: Tinggi mutlak maksimal pada desktop */
+    }
+    
+    .swiper-slide { 
+        position: relative; 
+        display: block; 
+        max-height: 550px; 
+    }
 
     .hero-img-element {
         width: 100%;
-        height: auto;
+        height: 100%; /* Menyesuaikan dengan batas maksimal container */
+        max-height: 550px; /* KUNCI: Mencegah gambar meninggi melampaui 550px */
         display: block;
-        /* Rasio Desktop Lebar (10:4) agar tidak terlalu gepeng namun tidak terlalu tinggi */
         aspect-ratio: 2.5 / 1; 
         object-fit: cover; 
+        object-position: center; /* Memastikan titik potong selalu di tengah */
     }
     
     .swiper-pagination-bullet-active { background: #D74690 !important; }
@@ -62,16 +72,17 @@ get_header(); ?>
     
     /* Half-Desktop / Tablet (Layar Menengah) */
     @media (max-width: 1024px) {
-        .hero-img-element { aspect-ratio: 2 / 1; } /* Rasio lebih kotak untuk tablet */
-        .grid-3-col { grid-template-columns: repeat(2, 1fr); } /* Turun menjadi 2 kolom */
+        .hero-swiper, .swiper-slide, .hero-img-element { max-height: none; } /* Lepas kunci pada tablet */
+        .hero-img-element { aspect-ratio: 2 / 1; } 
+        .grid-3-col { grid-template-columns: repeat(2, 1fr); } 
         .profil-row { flex-direction: column; text-align: center; }
         .profil-img-wrapper { margin: 0 auto 30px; }
     }
 
     /* Smartphone (Mobile) */
     @media (max-width: 768px) {
-        .hero-img-element { aspect-ratio: 16 / 9; } /* Rasio standar HP agar gambar jelas */
-        .grid-3-col { grid-template-columns: 1fr; } /* Turun menjadi 1 kolom penuh */
+        .hero-img-element { aspect-ratio: 16 / 9; } 
+        .grid-3-col { grid-template-columns: 1fr; } 
         .join-button-wrapper { right: 50% !important; transform: translateX(50%); bottom: -25px !important; }
         .btn-join { padding: 15px 35px; font-size: 14px; width: max-content; }
         .section-header { flex-direction: column; align-items: flex-start !important; gap: 15px; }
