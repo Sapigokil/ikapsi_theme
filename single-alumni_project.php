@@ -224,7 +224,7 @@ get_header('internal'); ?>
                     <div class="project-info-box">
                         <div class="info-box-title">Butuh Informasi Lebih Lanjut?</div>
                         <p style="font-size: 14px; color: #666; margin-bottom: 15px;">Jika Anda memiliki pertanyaan mengenai program kerja atau project ini, silakan hubungi tim kami untuk mendiskusikan peluang kolaborasi.</p>
-                        <a href="#" style="background-color: #D74690; color: #fff; padding: 10px 20px; border-radius: 4px; text-decoration: none; font-size: 14px; font-weight: bold; display: inline-block;">Hubungi Kami</a>
+                        <a href="https://wa.me/628212633200" target="_blank" style="background-color: #D74690; color: #fff; padding: 10px 20px; border-radius: 4px; text-decoration: none; font-size: 14px; font-weight: bold; display: inline-block;">Hubungi Kami</a>
                     </div>
 
                 </div>

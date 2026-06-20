@@ -285,7 +285,7 @@ get_header('internal'); ?>
                             <div style="font-size: 14px; color: #666;">Segera daftarkan diri Anda sebelum kuota penuh.</div>
                         </div>
                         <div>
-                            <a href="#" class="btn-daftar">Hubungi Panitia / Daftar</a>
+                            <a href="https://wa.me/628212633200" target="_blank" class="btn-daftar">Hubungi Panitia / Daftar</a>
                         </div>
                     </div>
 

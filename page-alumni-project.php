@@ -172,7 +172,7 @@ get_header('internal'); ?>
         <h1>Berjalan Jauh <br><span class="text-pink">Bersama</span></h1>
         <p>Membangun jembatan yang kokoh antara alumni, industri, dan sektor publik untuk menciptakan dampak yang berkelanjutan bagi Indonesia.</p>
         <div class="hero-buttons">
-            <a href="#" class="btn-outline-pink">Ajukan Kerjasama</a>
+            <a href="https://wa.me/628212633200" target="_blank" class="btn-outline-pink">Ajukan Kerjasama</a>
             <a href="#program" class="btn-pink">Pelajari Lebih Lanjut</a>
         </div>
     </section>
@@ -349,7 +349,7 @@ get_header('internal'); ?>
         <h2>Siap untuk Berkolaborasi?</h2>
         <p>Kami menyambut ide dan sinergi dari berbagai pihak untuk membangun ekosistem yang lebih baik.</p>
         <div style="margin-bottom: 40px;">
-            <a href="#" class="btn-pink" style="margin-right: 15px;">Mulai Diskusi</a>
+            <a href="https://wa.me/628212633200" target="_blank" class="btn-pink" style="margin-right: 15px;">Mulai Diskusi</a>
             <a href="#" class="btn-outline-pink" style="border:none; text-decoration:underline;">Lihat Legalitas Dokumen</a>
         </div>
 
@@ -370,7 +370,7 @@ get_header('internal'); ?>
                 <div class="sk-icon">⛬</div>
                 <h3>Social Impact</h3>
                 <p>Gerakan filantropi dan pengabdian masyarakat terstruktur dengan fokus pada pendidikan dan kesejahteraan rakyat.</p>
-                <a href="#">Gabung Aksi →</a>
+                <a href="https://wa.me/628212633200" target="_blank">Gabung Aksi →</a>
             </div>
         </div>
     </section>
@@ -382,7 +382,7 @@ get_header('internal'); ?>
             <p>Jangan ragu untuk menyampaikannya kepada kami. Kami sangat terbuka untuk mengeksplorasi inisiatif baru.</p>
         </div>
         <div>
-            <a href="#" class="btn-outline-pink">Ajukan Proposal Ide</a>
+            <a href="https://wa.me/628212633200" target="_blank" class="btn-outline-pink">Ajukan Proposal Ide</a>
         </div>
     </section>
 
