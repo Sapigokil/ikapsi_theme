@@ -11,28 +11,23 @@ get_header(); ?>
 
 <style>
     /* ==========================================================================
-       HERO SLIDER STYLING (Max Height < 565px Lock)
+       HERO SLIDER STYLING (Mode 100% Utuh / Tidak Terpotong)
        ========================================================================== */
     .hero-swiper { 
         width: 100%; 
         position: relative; 
-        max-height: 550px; /* KUNCI: Tinggi mutlak maksimal pada desktop */
     }
     
     .swiper-slide { 
         position: relative; 
         display: block; 
-        max-height: 550px; 
     }
 
     .hero-img-element {
         width: 100%;
-        height: 100%; /* Menyesuaikan dengan batas maksimal container */
-        max-height: 550px; /* KUNCI: Mencegah gambar meninggi melampaui 550px */
+        height: auto; /* Membiarkan tinggi menyesuaikan skala proporsional gambar asli */
         display: block;
-        aspect-ratio: 2.5 / 1; 
-        object-fit: cover; 
-        object-position: center; /* Memastikan titik potong selalu di tengah */
+        /* Dihapus: max-height, aspect-ratio, dan object-fit agar tidak ada proses cropping */
     }
     
     .swiper-pagination-bullet-active { background: #D74690 !important; }
@@ -72,8 +67,6 @@ get_header(); ?>
     
     /* Half-Desktop / Tablet (Layar Menengah) */
     @media (max-width: 1024px) {
-        .hero-swiper, .swiper-slide, .hero-img-element { max-height: none; } /* Lepas kunci pada tablet */
-        .hero-img-element { aspect-ratio: 2 / 1; } 
         .grid-3-col { grid-template-columns: repeat(2, 1fr); } 
         .profil-row { flex-direction: column; text-align: center; }
         .profil-img-wrapper { margin: 0 auto 30px; }
@@ -81,7 +74,6 @@ get_header(); ?>
 
     /* Smartphone (Mobile) */
     @media (max-width: 768px) {
-        .hero-img-element { aspect-ratio: 16 / 9; } 
         .grid-3-col { grid-template-columns: 1fr; } 
         .join-button-wrapper { right: 50% !important; transform: translateX(50%); bottom: -25px !important; }
         .btn-join { padding: 15px 35px; font-size: 14px; width: max-content; }
@@ -122,7 +114,7 @@ get_header(); ?>
                 if (!$has_slides) : ?>
                     <div class="swiper-slide">
                         <div class="hero-img-element" style="background-color: #e0e0e0; display:flex; align-items:center; justify-content:center;">
-                            <p style="color: #666; margin:0; font-size:18px;">Upload gambar hero (Rekomendasi Rasio Lebar) di ACF Beranda</p>
+                            <p style="color: #666; margin:0; font-size:18px;">Upload gambar hero (Ukuran 1920x600 px) di ACF Beranda</p>
                         </div>
                     </div>
                 <?php endif; ?>
